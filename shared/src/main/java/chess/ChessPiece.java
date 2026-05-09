@@ -307,20 +307,12 @@ public class ChessPiece {
                     // double move
                     if (myPosition.getRow() == 2) {
 
-                        ChessPosition bonusPos = new ChessPosition(myPosition.getRow() + 2, myPosition.getColumn());
+                        ChessPosition doublePos = new ChessPosition(myPosition.getRow() + 2, myPosition.getColumn());
 
                         // Both spaces must be empty.
-                        if (board.getPiece(bonusPos) == null) {
+                        if (board.getPiece(doublePos) == null) {
                             // Check for promo
-                            if (r == 8) {
-                                validMoves.add(new ChessMove(myPosition, pos, PieceType.QUEEN));
-                                validMoves.add(new ChessMove(myPosition, pos, PieceType.ROOK));
-                                validMoves.add(new ChessMove(myPosition, pos, PieceType.BISHOP));
-                                validMoves.add(new ChessMove(myPosition, pos, PieceType.KNIGHT));
-                            }
-                            else {
-                                validMoves.add(new ChessMove(myPosition, pos, null));
-                            }
+                            validMoves.add(new ChessMove(myPosition, doublePos, null));
                         }
                     }
                 }
@@ -401,22 +393,12 @@ public class ChessPiece {
                     // double move.
                     if (myPosition.getRow() == 7) {
 
-                        ChessPosition bonusPos =
-                                new ChessPosition(myPosition.getRow() - 2,
+                        ChessPosition doublePos = new ChessPosition(myPosition.getRow() - 2,
                                         myPosition.getColumn());
 
-                        if (board.getPiece(bonusPos) == null) {
+                        if (board.getPiece(doublePos) == null) {
                             // Check for promo
-                            if (r == 1) {
-
-                                validMoves.add(new ChessMove(myPosition, pos, PieceType.QUEEN));
-                                validMoves.add(new ChessMove(myPosition, pos, PieceType.ROOK));
-                                validMoves.add(new ChessMove(myPosition, pos, PieceType.BISHOP));
-                                validMoves.add(new ChessMove(myPosition, pos, PieceType.KNIGHT));
-                            }
-                            else {
-                                validMoves.add(new ChessMove(myPosition, pos, null));
-                            }
+                            validMoves.add(new ChessMove(myPosition, doublePos, null));
                         }
                     }
                 }
