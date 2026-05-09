@@ -202,7 +202,77 @@ public class ChessPiece {
             return validMoves;
         }
         if (piece.getPieceType() == PieceType.KNIGHT){
+            // This is just going to be a copy paste of the king but with different switch statements.
+            for (int i = 0; i < 8; i++) {
 
+                // helpful variables again
+                int rowChange = 0;
+                int colChange = 0;
+
+                switch (i) {
+
+                    case 0:
+                        rowChange = -2;
+                        colChange = -1;
+                        break;
+
+                    case 1:
+                        rowChange = -2;
+                        colChange = 1;
+                        break;
+
+                    case 2:
+                        rowChange = -1;
+                        colChange = -2;
+                        break;
+
+                    case 3:
+                        rowChange = -1;
+                        colChange = 2;
+                        break;
+
+                    case 4:
+                        rowChange = 1;
+                        colChange = -2;
+                        break;
+
+                    case 5:
+                        rowChange = 1;
+                        colChange = 2;
+                        break;
+
+                    case 6:
+                        rowChange = 2;
+                        colChange = -1;
+                        break;
+
+                    case 7:
+                        rowChange = 2;
+                        colChange = 1;
+                        break;
+                }
+
+                int r = myPosition.getRow() + rowChange;
+                int c = myPosition.getColumn() + colChange;
+
+                if (r < 1 || r > 8 || c < 1 || c > 8) {
+                    continue;
+                }
+
+                ChessPosition pos = new ChessPosition(r, c);
+                ChessPiece target = board.getPiece(pos);
+
+                if (target == null) {
+                    validMoves.add(new ChessMove(myPosition, pos, null));
+                }
+                else {
+                    if (target.getTeamColor() != piece.getTeamColor()) {
+                        validMoves.add(new ChessMove(myPosition, pos, null));
+                    }
+                }
+            }
+
+            return validMoves;
         }
         if (piece.getPieceType() == PieceType.PAWN){
 
@@ -212,6 +282,7 @@ public class ChessPiece {
         }
         if (piece.getPieceType() == PieceType.ROOK){
 
+            return validMoves;
         }
 
         return null;
