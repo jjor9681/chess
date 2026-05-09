@@ -59,33 +59,90 @@ public class ChessPiece {
         ChessPiece piece = board.getPiece(myPosition);
         List<ChessMove> validMoves = new ArrayList<>(); // According to stack overflow, lists are made like this.
         if (piece.getPieceType() == PieceType.BISHOP){
-            // return List.of(new ChessMove(new ChessPosition(5,4), new ChessPosition(1,8),null));
-            // The expected output looks like it scans the board from left to right, moving up a column after each scan
-            // So I should probably use nested for loops to do this.
-            for (int c = 1; c <= 8 ; c++){
-                if (c == myPosition.getColumn()){
-                    // Do nothing. Can't move on the same column.
-                    continue;
+            // Okay my previous strategy sucked at detected other pieces so I am trying something else...
+
+            // for loop that point to all four corners away from the bishop.
+            for (int i = 0; i < 4; i++) {
+                int rowPath = 0;
+                int colPath = 0;
+                switch (i) {
+
+                    // North East of bishop
+                    case 0:
+                        rowPath = 1;
+                        colPath = 1;
+                        break;
+                    // South East of bishop
+                    case 1:
+                        rowPath = -1;
+                        colPath = 1;
+                        break;
+                    // South West of bishop
+                    case 2:
+                        rowPath = -1;
+                        colPath = -1;
+                        break;
+                    // North West of bishop
+                    case 3:
+                        rowPath = 1;
+                        colPath = -1;
+                        break;
                 }
-                for (int r = 1; r <= 8; r++){
-                    if (r == myPosition.getRow()){
-                        // Do nothing. Can't move on the same row.
-                        continue;
+
+                int r = myPosition.getRow() + rowPath;
+                int c = myPosition.getColumn() + colPath;
+
+                // Makes sure we are not targeting out of bounds. When we do target out of bounds, or
+                // we discover a friendly/enemy, break.
+                while (r >= 1 && r <= 8 && c >= 1 && c <= 8) {
+
+                    // Make a new object real quick for where we are looking and if there is a piece there,
+                    // we are going to target it.
+                    ChessPosition pos = new ChessPosition(r, c);
+                    ChessPiece target = board.getPiece(pos);
+
+                    // If nobody is there, then we are good to go.
+                    if (target == null) {
+                        validMoves.add(new ChessMove(myPosition, pos, null));
                     }
-                    /* Now I need to know whether the bishop is on the same diagonal as
-                    *  whatever square we are looking at, and I'm going to have to do it using math.
-                    *  From ECEn 320's chess project, I remember that you can just measure the row difference
-                    *  and column difference of the possible move from the piece's current position, and if
-                    *  they're equal, then I'm chilling. And lengths are always positive so I can just abs.*/
-                    if (Math.abs(r - myPosition.getRow()) == Math.abs(c - myPosition.getColumn())){
-                        validMoves.add(new ChessMove(myPosition, new ChessPosition(r,c), null));
+                    // If there is someone there, i just gotta check if their color isn't the same.
+                    else {
+
+                        if (target.getTeamColor() != piece.getTeamColor()) {
+                            validMoves.add(new ChessMove(myPosition, pos, null));
+                        }
+                        break;
                     }
+                    // Update target depending on the direction we are looking.
+                    r += rowPath;
+                    c += colPath;
                 }
             }
             return validMoves;
         }
+        if (piece.getPieceType() == PieceType.KING){
+
+        }
+        if (piece.getPieceType() == PieceType.KNIGHT){
+
+        }
+        if (piece.getPieceType() == PieceType.PAWN){
+
+        }
+        if (piece.getPieceType() == PieceType.QUEEN){
+
+        }
+        if (piece.getPieceType() == PieceType.ROOK){
+
+        }
+
         return null;
     }
+
+
+
+
+
 
     @Override
     public boolean equals(Object o) {
