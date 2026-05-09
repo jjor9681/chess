@@ -42,7 +42,12 @@ public class ChessBoard {
      * (How the game of chess normally starts)
      */
     public void resetBoard() {
-        throw new RuntimeException("Not implemented");
+
+        // Okay I imagine I should clear the board using the method the professor showed in the video.
+        squares = new ChessPiece[8][8];
+
+
+
     }
 
     @Override
