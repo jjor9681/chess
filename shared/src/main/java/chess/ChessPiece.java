@@ -121,7 +121,85 @@ public class ChessPiece {
             return validMoves;
         }
         if (piece.getPieceType() == PieceType.KING){
+            // For the king, I am thinking of a for loop that will iterate all 8 spaces around it.
+            // I can do a switch statement again for all 8 slots.
+            // Then the team color check.
+            for (int i = 0; i < 8; i++) {
 
+                // Some helper variables.
+                int rowChange = 0;
+                int colChange = 0;
+
+                switch (i) {
+
+                    case 0: // bottom-left
+                        rowChange = -1;
+                        colChange = -1;
+                        break;
+
+                    case 1: // bottom
+                        rowChange = -1;
+                        colChange = 0;
+                        break;
+
+                    case 2: // bottom-right
+                        rowChange = -1;
+                        colChange = 1;
+                        break;
+
+                    case 3: // left
+                        rowChange = 0;
+                        colChange = -1;
+                        break;
+
+                    case 4: // right
+                        rowChange = 0;
+                        colChange = 1;
+                        break;
+
+                    case 5: // top-left
+                        rowChange = 1;
+                        colChange = -1;
+                        break;
+
+                    case 6: // top
+                        rowChange = 1;
+                        colChange = 0;
+                        break;
+
+                    case 7: // top-right
+                        rowChange = 1;
+                        colChange = 1;
+                        break;
+                }
+
+                int r = myPosition.getRow() + rowChange;
+                int c = myPosition.getColumn() + colChange;
+
+                // Is the target in bounds?
+                if (r < 1 || r > 8 || c < 1 || c > 8) {
+                    continue;
+                }
+
+                // Time to check if the target at (r,c) is valid.
+                // Now I'll just do the same thing as with the bishop.
+                ChessPosition pos = new ChessPosition(r, c);
+                ChessPiece target = board.getPiece(pos);
+
+                // If nobody is there, then we are good to go.
+                if (target == null) {
+                    validMoves.add(new ChessMove(myPosition, pos, null));
+                }
+                // If there is someone there, i just gotta check if their color isn't the same.
+                else {
+
+                    if (target.getTeamColor() != piece.getTeamColor()) {
+                        validMoves.add(new ChessMove(myPosition, pos, null));
+                    }
+                }
+
+            }
+            return validMoves;
         }
         if (piece.getPieceType() == PieceType.KNIGHT){
 
