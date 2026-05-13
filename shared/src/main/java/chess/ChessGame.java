@@ -12,12 +12,22 @@ import java.util.Collection;
  */
 public class ChessGame {
 
-    // I need a variable to know whose turn it is.
+    // From what I'm learning, these private variables are called "fields" ...
+    // They belong to the object itself. So every ChessGame() object that I make will always store
+    // its own version of teamTurn and board.
+    // The variables inside of ChessGame() are local variables and only exist temporarily inside the constructor.
+
     private TeamColor teamTurn;
+    private ChessBoard board;
 
     public ChessGame() {
         // White always goes first so I can just have it always start with white.
         teamTurn = TeamColor.WHITE;
+
+        // I need to start thinking about how to make an actual chess game. I should start with the board.
+        board = new ChessBoard();
+        // And it needs all of its pieces.
+        board.resetBoard();
     }
 
     /**
