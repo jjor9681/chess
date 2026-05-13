@@ -1,3 +1,5 @@
+// Okay I have read the instructions and am trying to understand how I should start.
+
 package chess;
 
 import java.util.Collection;
