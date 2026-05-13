@@ -19,6 +19,7 @@ public class ChessGame {
 
     private TeamColor teamTurn;
     private final ChessBoard board; // High key not sure if I'm going to ever need to change boards so I'll use final.
+                                    // Sounds like using final prevents the board pointer from ever changing.
 
     public ChessGame() {
         // White always goes first so I can just have it always start with white.
@@ -54,7 +55,7 @@ public class ChessGame {
      * Enum identifying the 2 possible teams in a chess game
      */
     public enum TeamColor {
-        WHITE,
+        WHITE,// I was accessing this earlier with ChessGame.TeamColor.WHITE which makes sense.
         BLACK
     }
 
