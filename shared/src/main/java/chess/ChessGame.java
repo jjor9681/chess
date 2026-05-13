@@ -24,8 +24,11 @@ public class ChessGame {
      * @return Which team's turn it is
      */
     public TeamColor getTeamTurn() {
-        // I am thinking I can keep count of the number of turns made and if it is even, then it should be white's turn.
-
+        // I originally thought I should use parity to track whose team it is but
+        // high key that would suck if i loaded in an arbitrary position and didn't
+        // have a way to show how many moves were made already. All of this was before
+        // I realized the method below setTeamTurn() can just be used at the end of every turn
+        return teamTurn;
     }
 
     /**
@@ -34,7 +37,7 @@ public class ChessGame {
      * @param team the team whose turn it is
      */
     public void setTeamTurn(TeamColor team) {
-        throw new RuntimeException("Not implemented");
+        teamTurn = team;
     }
 
     /**
