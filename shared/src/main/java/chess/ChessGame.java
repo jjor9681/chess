@@ -18,7 +18,7 @@ public class ChessGame {
     // The variables inside of ChessGame() are local variables and only exist temporarily inside the constructor.
 
     private TeamColor teamTurn;
-    private ChessBoard board;
+    private ChessBoard board; // Not using final here in case I want multiple boards.
 
     public ChessGame() {
         // White always goes first so I can just have it always start with white.
