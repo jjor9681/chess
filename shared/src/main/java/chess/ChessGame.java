@@ -12,15 +12,20 @@ import java.util.Collection;
  */
 public class ChessGame {
 
-    public ChessGame() {
+    // I need a variable to know whose turn it is.
+    private TeamColor teamTurn;
 
+    public ChessGame() {
+        // White always goes first so I can just have it always start with white.
+        teamTurn = TeamColor.WHITE;
     }
 
     /**
      * @return Which team's turn it is
      */
     public TeamColor getTeamTurn() {
-        throw new RuntimeException("Not implemented");
+        // I am thinking I can keep count of the number of turns made and if it is even, then it should be white's turn.
+
     }
 
     /**
@@ -48,7 +53,7 @@ public class ChessGame {
      * startPosition
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
-        throw new RuntimeException("Not implemented");
+        // I need to use pieceMoves that I made in ChessPiece.java
     }
 
     /**
@@ -108,5 +113,15 @@ public class ChessGame {
      */
     public ChessBoard getBoard() {
         throw new RuntimeException("Not implemented");
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj);
     }
 }
