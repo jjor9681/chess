@@ -18,7 +18,7 @@ public class ChessGame {
     // The variables inside of ChessGame() are local variables and only exist temporarily inside the constructor.
 
     private TeamColor teamTurn;
-    private final ChessBoard board; // High key not sure if I'm going to ever need to change boards so I'll use final.
+    private ChessBoard board; // High key not sure if I'm going to ever need to change boards so I'll use final.
                                     // Sounds like using final prevents the board pointer from ever changing.
 
     public ChessGame() {
@@ -127,7 +127,8 @@ public class ChessGame {
      * @param board the new board to use
      */
     public void setBoard(ChessBoard board) {
-        throw new RuntimeException("Not implemented");
+        // Okay obviously board cannot be private final.
+        this.board = board;
     }
 
     /**
