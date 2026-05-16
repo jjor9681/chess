@@ -68,6 +68,7 @@ public class ChessGame {
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
         // Okay I imagine I need to implement the methods below before I can implement this one.
+        return null;
     }
 
     /**
@@ -153,7 +154,7 @@ public class ChessGame {
                 // "mountains" ... It is "for(var m: mountains){print (m);}" and that gets them all.
                 // I can do the same thing I bet...
                 for (var move: attacks){
-                    if (move.getEndPosition() == kingCurrentLocation){
+                    if (move.getEndPosition().equals(kingCurrentLocation)){
                         return true;
                     }
                 }
