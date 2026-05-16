@@ -67,7 +67,7 @@ public class ChessGame {
      * startPosition
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
-
+        // Okay I imagine I need to implement the methods below before I can implement this one.
     }
 
     /**
@@ -87,7 +87,80 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+        // How do I know where the King is? I don't know how to track him.
+        // Do I store a variable with his current location?
+        // Or should I just scan the board every time for him with nested loops?
+        // Let's try that.
+
+        // If I find him, i'll store his location in this variable.
+        ChessPosition kingCurrentLocation = null;
+
+        // Now the nested for loops.
+        for (int r = 1; r <= 8; r++) {
+            for (int c = 1; c <= 8; c++) {
+                // Okay let's get the piece at this location.
+                ChessPosition scanSpot = new ChessPosition(r, c);
+                ChessPiece mysteryPiece = board.getPiece(scanSpot);
+
+                // Is there actually a piece there?
+                if (mysteryPiece == null) {
+                    break;
+                }
+
+                // Is the piece a king?
+                if (mysteryPiece.getPieceType() != ChessPiece.PieceType.KING) {
+                    break;
+                }
+
+                // Is it the color we are looking for?
+                if (mysteryPiece.getTeamColor() != teamColor) {
+                    break;
+                }
+
+                // At this point I should have the king found.
+                // And there is always a king so this code will always get to this point.
+                kingCurrentLocation = scanSpot;
+            }
+        }
+
+        // Now that I know where the king is, I suppose I should just scan the
+        // entire enemy team and see if any of them have the king's location in their set of
+        // pieceMoves? It feels horrifically inefficient, but I'm not storing the location
+        // of any of the pieces, so I legit have no better way than to just scan the whole
+        // board each time.
+        for (int r = 1; r <= 8; r++) {
+            for (int c = 1; c <= 8; c++) {
+                // okay let's get this location stored.
+                ChessPosition location = new ChessPosition(r,c);
+                ChessPiece enemy = board.getPiece(location);
+
+                // Is there a piece here?
+                if (enemy == null){
+                    break;
+                }
+
+                // Is the piece an enemy?
+                if (enemy.getTeamColor() == teamColor){
+                    break;
+                }
+
+                // Okay this is an enemy piece. So I can just call pieceMoves on them?
+                // I need to store the moves and check them all somehow.
+                Collection<ChessMove> attacks = enemy.pieceMoves(board,location);
+
+                // Okay I have all their moves, but how do I access the collection?
+                // Okay the collections.md lecture has an example of how to access
+                // "mountains" ... It is "for(var m: mountains){print (m);}" and that gets them all.
+                // I can do the same thing I bet...
+                for (var move: attacks){
+                    if (move.getEndPosition() == kingCurrentLocation){
+                        return true;
+                    }
+                }
+
+            }
+        }
+        return false;
     }
 
     /**
