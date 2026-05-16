@@ -75,6 +75,8 @@ public class ChessGame {
         if (piece == null){
             return null;
         }
+        // okay I can call pieceMoves on piece and just return it.
+        return piece.pieceMoves(board, startPosition);
 
     }
 
