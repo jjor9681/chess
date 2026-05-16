@@ -104,17 +104,17 @@ public class ChessGame {
 
                 // Is there actually a piece there?
                 if (mysteryPiece == null) {
-                    break;
+                    continue;
                 }
 
                 // Is the piece a king?
                 if (mysteryPiece.getPieceType() != ChessPiece.PieceType.KING) {
-                    break;
+                    continue;
                 }
 
                 // Is it the color we are looking for?
                 if (mysteryPiece.getTeamColor() != teamColor) {
-                    break;
+                    continue;
                 }
 
                 // At this point I should have the king found.
@@ -136,12 +136,12 @@ public class ChessGame {
 
                 // Is there a piece here?
                 if (enemy == null){
-                    break;
+                    continue;
                 }
 
                 // Is the piece an enemy?
                 if (enemy.getTeamColor() == teamColor){
-                    break;
+                    continue;
                 }
 
                 // Okay this is an enemy piece. So I can just call pieceMoves on them?
