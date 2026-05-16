@@ -136,7 +136,8 @@ public class ChessGame {
      * @return the chessboard
      */
     public ChessBoard getBoard() {
-        throw new RuntimeException("Not implemented");
+        // I suspect that I am just returning board here.
+        return board;
     }
 
     @Override
