@@ -67,7 +67,15 @@ public class ChessGame {
      * startPosition
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
-        // I need to use pieceMoves that I made in ChessPiece.java
+        // I need to use pieceMoves that I made in ChessPiece.java, I assume.
+        // But pieceMoves wants a board and a position?
+        // So let's at least get the piece from the board.
+        ChessPiece piece = board.getPiece(startPosition); // Same as last lab, so this should work.
+        // Return null if there is nothing there.
+        if (piece == null){
+            return null;
+        }
+
     }
 
     /**
