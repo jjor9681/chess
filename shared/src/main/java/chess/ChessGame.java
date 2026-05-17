@@ -2,6 +2,7 @@
 
 package chess;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 /**
@@ -68,6 +69,30 @@ public class ChessGame {
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
         // I need to implement validMoves before I can implement checkmate or stalemate.
+        // Here is what I am thinking, use the pieceMoves method on the startPosition and
+        // then loop through each of the moves to see if any of the moves put my team in check.
+        // If they do, then i'll just not include that one in my new list.
+
+        ChessPiece piece = board.getPiece(startPosition);
+        // check rq to see if it is existent.
+        if (piece == null){
+            return null;
+        }
+
+        // Okay, my list does not need to be ordered or anything so i'll just use collection.
+        Collection<ChessMove> theoreticalMoves = piece.pieceMoves(board,startPosition);
+        Collection<ChessMove> validMoves = new ArrayList<>();
+
+        // I need to fill the validMoves collection with moves from theoreticalMoves that
+        // do NOT put me in check.
+        // I can just use the mountains for loop example from the collections lecture again
+        // to go through the whole collection.
+        for (var safeMove: theoreticalMoves){
+            // Okay so I should move the piece and see if it puts me in check,
+            // then move it back. During the isInCheck if statement, I can
+            // decide whether or not to add the move to validMoves.
+
+        }
 
         return null;
     }
