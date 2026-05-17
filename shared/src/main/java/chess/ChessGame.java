@@ -67,7 +67,8 @@ public class ChessGame {
      * startPosition
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
-        // Okay I imagine I need to implement the methods below before I can implement this one.
+        // I need to implement validMoves before I can implement checkmate or stalemate.
+
         return null;
     }
 
