@@ -147,10 +147,16 @@ public class ChessGame {
         if (availableMoves == null){
             throw new InvalidMoveException();
         }
+        // Make sure the piece that is being moves is on the same team as whoever's team it is.
+        ChessPiece piece = board.getPiece(move.getStartPosition());
+        if (piece.getTeamColor() != teamTurn){
+            throw new InvalidMoveException();
+        }
 
+        // onto the loop.
         for (var possibleMove : availableMoves){
             if (possibleMove.equals(move)){
-                ChessPiece piece = board.getPiece(move.getStartPosition());
+                piece = board.getPiece(move.getStartPosition());
                 board.addPiece(move.getStartPosition(),null);
 
                 // Promotion check.
@@ -262,7 +268,42 @@ public class ChessGame {
      */
     public boolean isInCheckmate(TeamColor teamColor) {
         // I probably need validMoves working in order for this to work.
-        return false;
+        // Okay I remember doing this in ECEn 320.
+        // If that team's king is in check, and they have no other valid moves, then checkmate.
+
+        // Are we in check?
+        if (isInCheck(teamColor)){
+
+            // Check all of this team's pieces for valid moves.
+            for (int r = 1; r <= 8; r++) {
+                for (int c = 1; c <= 8; c++) {
+                    ChessPosition position = new ChessPosition(r, c);
+                    ChessPiece piece = board.getPiece(position);
+
+                    if (piece == null) { // Nobody was there.
+                        continue;
+                    }
+                    if (piece.getTeamColor() != teamColor) { // Wrong team.
+                        continue;
+                    }
+
+                    Collection<ChessMove> moves = validMoves(position);
+                    // I need to know if moves is empty.
+                    int i = 0;
+                    // Not sure how to do it with an if statement.
+                    for (var move : moves){
+                        i += 1;
+                    }
+                    if (i > 0){ // Somebody somewhere can move. Return false.
+                        return false;
+                    }
+                }
+            }
+        } else { // if i'm not in check, I need to return false.
+            return false;
+        }
+        // and that's the game!
+        return true;
     }
 
     /**
@@ -273,7 +314,42 @@ public class ChessGame {
      * @return True if the specified team is in stalemate, otherwise false
      */
     public boolean isInStalemate(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+        // Same thing as checkmate, just that the team is not in check.
+        // I can just copy paste and add a ! to the initial if statement.
+
+        // Are we NOT in check?
+        if (!isInCheck(teamColor)){
+
+            // Check all of this team's pieces for valid moves.
+            for (int r = 1; r <= 8; r++) {
+                for (int c = 1; c <= 8; c++) {
+                    ChessPosition position = new ChessPosition(r, c);
+                    ChessPiece piece = board.getPiece(position);
+
+                    if (piece == null) { // Nobody was there.
+                        continue;
+                    }
+                    if (piece.getTeamColor() != teamColor) { // Wrong team.
+                        continue;
+                    }
+
+                    Collection<ChessMove> moves = validMoves(position);
+                    // I need to know if moves is empty.
+                    int i = 0;
+                    // Not sure how to do it with an if statement.
+                    for (var move : moves){
+                        i += 1;
+                    }
+                    if (i > 0){ // Somebody somewhere can move. Return false.
+                        return false;
+                    }
+                }
+            }
+        } else { // if i'm not in check, I need to return false.
+            return false;
+        }
+        // and that's the game!
+        return true;
     }
 
     /**
