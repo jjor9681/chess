@@ -345,7 +345,7 @@ public class ChessGame {
                     }
                 }
             }
-        } else { // if i'm not in check, I need to return false.
+        } else { // if i'm IN check, I need to return false.
             return false;
         }
         // and that's the game!
