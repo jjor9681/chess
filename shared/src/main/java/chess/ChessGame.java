@@ -143,6 +143,11 @@ public class ChessGame {
 
         Collection<ChessMove> availableMoves = validMoves(move.getStartPosition());
 
+        // Make sure the user didn't try to move an empty square.
+        if (availableMoves == null){
+            throw new InvalidMoveException();
+        }
+
         for (var possibleMove : availableMoves){
             if (possibleMove.equals(move)){
                 ChessPiece piece = board.getPiece(move.getStartPosition());
