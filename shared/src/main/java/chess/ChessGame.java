@@ -4,6 +4,7 @@ package chess;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Objects;
 
 /**
  * A class that can manage a chess game, making moves on a board
@@ -155,7 +156,7 @@ public class ChessGame {
 
         // onto the loop.
         for (var possibleMove : availableMoves){
-            if (possibleMove.equals(move)){
+            if (possibleMove.equals(move)){ // I supppose .equals is gonna be valid here.
                 piece = board.getPiece(move.getStartPosition());
                 board.addPiece(move.getStartPosition(),null);
 
@@ -250,7 +251,7 @@ public class ChessGame {
                 // "mountains" ... It is "for(var m: mountains){print (m);}" and that gets them all.
                 // I can do the same thing I bet...
                 for (var move: attacks){
-                    if (move.getEndPosition().equals(kingCurrentLocation)){
+                    if (move.getEndPosition().equals(kingCurrentLocation)){ // Not sure why .equals works here and not anywhere else.
                         return true;
                     }
                 }
@@ -373,12 +374,16 @@ public class ChessGame {
     }
 
     @Override
-    public int hashCode() {
-        return super.hashCode();
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        ChessGame chessGame = (ChessGame) o;
+        return teamTurn == chessGame.teamTurn && Objects.equals(board, chessGame.board);
     }
 
     @Override
-    public boolean equals(Object obj) {
-        return super.equals(obj);
+    public int hashCode() {
+        return Objects.hash(teamTurn, board);
     }
 }
