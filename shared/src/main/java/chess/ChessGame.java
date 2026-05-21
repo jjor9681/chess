@@ -135,7 +135,23 @@ public class ChessGame {
      * @throws InvalidMoveException if move is invalid
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
-        throw new RuntimeException("Not implemented");
+        // Here is my thought process.
+        // 1. Make a collection of all the valid moves from that piece's position.
+        // 2. Check and see if the user's move is on that list.
+        // 3. If so, I'll make the move and then swith turns.
+        // 4. If not, then I'll throw invalidMove and not switch turns.
+
+        Collection<ChessMove> availableMoves = validMoves(move.getStartPosition());
+
+        for (var possibleMove : availableMoves){
+            if (possibleMove.equals(move)){
+                ChessPiece piece = board.getPiece(move.getStartPosition());
+                board.addPiece(move.getStartPosition(),null);
+                board.addPiece(move.getEndPosition(),piece);
+                return;
+            }
+        }
+        throw new InvalidMoveException();
     }
 
     /**
