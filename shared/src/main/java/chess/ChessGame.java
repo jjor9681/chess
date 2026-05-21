@@ -147,7 +147,19 @@ public class ChessGame {
             if (possibleMove.equals(move)){
                 ChessPiece piece = board.getPiece(move.getStartPosition());
                 board.addPiece(move.getStartPosition(),null);
+
+                // Promotion check.
+                if (move.getPromotionPiece() != null){
+                    piece = new ChessPiece(piece.getTeamColor(),move.getPromotionPiece());
+                }
                 board.addPiece(move.getEndPosition(),piece);
+
+                // Switch Turns
+                if (teamTurn == TeamColor.WHITE){
+                    setTeamTurn(TeamColor.BLACK);
+                } else {
+                    setTeamTurn(TeamColor.WHITE);
+                }
                 return;
             }
         }
