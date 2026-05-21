@@ -91,10 +91,41 @@ public class ChessGame {
             // Okay so I should move the piece and see if it puts me in check,
             // then move it back. During the isInCheck if statement, I can
             // decide whether or not to add the move to validMoves.
+            // ALSO, when I move the piece back, I cannot forget to "uncapture" whatever
+            // piece I just removed from the board.
+
+            ChessPosition endPosition = safeMove.getEndPosition();
+
+            // Okay, let's save our current piece and the piece we're about to capture before
+            // the test move is made.
+            ChessPiece testPiece = board.getPiece(startPosition);
+            ChessPiece enemyPiece = board.getPiece(endPosition);
+
+            // Okie dokie, now we make the move.
+            // Pick up the old piece.
+            board.addPiece(startPosition,null);
+            // Place down the new one.
+            board.addPiece(endPosition, testPiece);
+
+            // High key there is a moment above where the piece does not exist for a moment.
+            // I have to choose between that or having two of the same piece at the same time.
+            // not sure if it matters but this is a note to my future self if problems like that occur.
+
+            // Okay, now if we are NOT in check, let's add safeMove to validMoves.
+            if (!isInCheck(testPiece.getTeamColor())){
+                validMoves.add(safeMove);
+            }
+
+            // Time to restore the board.
+            board.addPiece(startPosition, testPiece);
+            board.addPiece(endPosition, enemyPiece);
+
+            // Another note to my future self. Not totally sure if enemyPiece ends up being null
+            // what will end up happening. Hopefully it just works.
 
         }
 
-        return null;
+        return validMoves;
     }
 
     /**
