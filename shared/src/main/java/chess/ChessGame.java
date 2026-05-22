@@ -147,6 +147,35 @@ public class ChessGame {
             // what will end up happening. Hopefully it just works.
 
         }
+        // En passant extra credit
+        if (piece.getPieceType() == ChessPiece.PieceType.PAWN){ // I need to include ChessPiece. because I am no longer in ChessPiece.java
+            // Make sure that it's not null or this will crash at the beginning of the game haha
+            if (lastMove != null){
+                // Who most recently moved?
+                ChessPiece possiblePawn = board.getPiece(lastMove.getEndPosition());
+                // Are they an enemy pawn?
+                if (possiblePawn.getPieceType() == ChessPiece.PieceType.PAWN && piece.getTeamColor() != possiblePawn.getTeamColor()){
+                    // okay I need to do some math here. In ECEn 320 I did it like this:
+                    int enemyRowMovement = Math.abs(lastMove.getStartPosition().getRow() - lastMove.getEndPosition().getRow());
+                    int adjacentDistance = lastMove.getEndPosition().getRow() - startPosition.getRow();
+                    int strikingDistance = Math.abs(lastMove.getEndPosition().getColumn() - startPosition.getColumn());
+                    if (enemyRowMovement == 2){ // Enemy pawn double moved.
+                        if (adjacentDistance == 0){ // Pawns on the same row.
+                            if (strikingDistance == 1) { // Pawns are side by side.
+                                // Okay we know that the pawns meet the enPassant conditions.
+                                // Now I need to check behind the enemy pawn and make sure
+                                // that the square there is empty.
+                                // Actually, sike! I know the square there is empty because the pawn wouldn't
+                                // have been able to double move.
+
+                            }
+
+                    }
+                }
+            }
+        }
+
+
 
         return validMoves;
     }
