@@ -23,6 +23,19 @@ public class ChessGame {
     private ChessBoard board; // High key not sure if I'm going to ever need to change boards so I'll use final.
                                     // Sounds like using final prevents the board pointer from ever changing.
 
+    // Okay for extra credit I need to remember when pieces have moved. In ECEn 320,
+    // I just kept track of if the rooks/kings have ever moved. For en passant,
+    // i just kept track of every move made ever, and if it was a pawn double move,
+    // then adjacent enemy pawns get to attack.
+    private boolean whiteKingCanCastle;
+    private boolean blackKingCanCastle;
+    private boolean whiteLeftRookCanCastle;
+    private boolean whiteRightRookCanCastle;
+    private boolean blackLeftRookCanCastle;
+    private boolean blackRightRookCanCastle;
+    private ChessMove lastMove;
+
+
     public ChessGame() {
         // White always goes first so I can just have it always start with white.
         teamTurn = TeamColor.WHITE;
@@ -31,6 +44,15 @@ public class ChessGame {
         board = new ChessBoard();
         // And it needs all of its pieces.
         board.resetBoard();
+
+        // Extra credit setup.
+        whiteKingCanCastle = true;
+        blackKingCanCastle = true;
+        whiteLeftRookCanCastle = true;
+        whiteRightRookCanCastle = true;
+        blackLeftRookCanCastle = true;
+        blackRightRookCanCastle = true;
+        lastMove = null;
     }
 
     /**
