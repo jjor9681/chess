@@ -200,7 +200,56 @@ public class ChessGame {
         }
 
         if (piece.getPieceType() == ChessPiece.PieceType.KING){
+            // Okay here is my thought process.
+            // 1. Make sure the king is not currently in check.
+            // 2. Check castling fields.
+            // 3. Make sure in between squares are empty.
+            // 4. Make sure the king doesn't pass through check or wind up in check.
+            // 5. If that's all good, then the king can castle!
 
+            if (!isInCheck(piece.getTeamColor())){
+                if (piece.getTeamColor() == TeamColor.WHITE){ // White's piece.
+                    if (whiteKingCanCastle) { // King has not moved.
+                        if (whiteLeftRookCanCastle){
+                            // are the in between squares all empty?
+                            ChessPosition leftTwo = new ChessPosition(1,2);
+                            ChessPosition leftThree = new ChessPosition(1,3);
+                            ChessPosition leftFour = new ChessPosition(1,4);
+                            if (board.getPiece(leftTwo) == null && board.getPiece(leftThree) == null && board.getPiece(leftFour) == null){
+
+                            }
+                        }
+                        if (whiteRightRookCanCastle) {
+                            // are the in between squares all empty?
+                            ChessPosition rightSix = new ChessPosition(1,6);
+                            ChessPosition rightSeven = new ChessPosition(1,7);
+                            if (board.getPiece(rightSeven) == null && board.getPiece(rightSix) == null){
+
+                            }
+                        }
+                    }
+                } else { // Black's piece.
+                    if (blackKingCanCastle) { // King has not moved.
+                        if (blackLeftRookCanCastle){
+                            // are the in between squares all empty?
+                            ChessPosition leftTwo = new ChessPosition(8,2);
+                            ChessPosition leftThree = new ChessPosition(8,3);
+                            ChessPosition leftFour = new ChessPosition(8,4);
+                            if (board.getPiece(leftTwo) == null && board.getPiece(leftThree) == null && board.getPiece(leftFour) == null){
+
+                            }
+                        }
+                        if (blackRightRookCanCastle) {
+                            // are the in between squares all empty?
+                            ChessPosition rightSix = new ChessPosition(8,6);
+                            ChessPosition rightSeven = new ChessPosition(8,7);
+                            if (board.getPiece(rightSeven) == null && board.getPiece(rightSix) == null){
+
+                            }
+                        }
+                    }
+                }
+            }
         }
 
 
@@ -273,20 +322,34 @@ public class ChessGame {
                     }
                 }
                 // If a rook has moved, it can no longer castle with the king.
-                if (piece.getPieceType() == ChessPiece.PieceType.ROOK){
+                if (piece.getPieceType() == ChessPiece.PieceType.ROOK && piece.getTeamColor() == TeamColor.WHITE){
                     if (move.getStartPosition().getColumn() == 1){
                         whiteLeftRookCanCastle = false;
                     }
                     else if (move.getStartPosition().getColumn() == 8){
                         whiteRightRookCanCastle = false;
                     }
-                } else {
+                } else if (piece.getPieceType() == ChessPiece.PieceType.ROOK && piece.getTeamColor() == TeamColor.BLACK){
                     if (move.getStartPosition().getColumn() == 1){
                         blackLeftRookCanCastle = false;
                     }
                     else if (move.getStartPosition().getColumn() == 8){
                         blackRightRookCanCastle = false;
                     }
+                }
+                // Now I am worried about someone promoting to a rook, and then moving it to a square that can castle.
+                // If a square is ever captured, then this can happen. So I need to update the fields when a corner Rook gets captured.
+                if (move.getEndPosition().getRow() == 1 && move.getEndPosition().getColumn() == 1){
+                    whiteLeftRookCanCastle = false;
+                }
+                else if (move.getEndPosition().getRow() == 1 && move.getEndPosition().getColumn() == 8){
+                    whiteRightRookCanCastle = false;
+                }
+                else if (move.getEndPosition().getRow() == 8 && move.getEndPosition().getColumn() == 1){
+                    blackLeftRookCanCastle = false;
+                }
+                else if (move.getEndPosition().getRow() == 8 && move.getEndPosition().getColumn() == 8){
+                    blackRightRookCanCastle = false;
                 }
 
                 return;
