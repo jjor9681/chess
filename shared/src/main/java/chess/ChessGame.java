@@ -235,6 +235,15 @@ public class ChessGame {
                 piece = board.getPiece(move.getStartPosition());
                 board.addPiece(move.getStartPosition(),null);
 
+                if (piece.getPieceType() == ChessPiece.PieceType.PAWN){
+                    // I need to know if the pawn is moving to an empty square and if the movement is diagonal.
+                    if (board.getPiece(move.getEndPosition()) == null){ // Empty square, now are we moving diagonally?
+                        if (move.getStartPosition().getColumn() != move.getEndPosition().getColumn()){ // Okay this is en passant.
+                            // I need to take out the enemy pawn, which should be at last position.
+                            board.addPiece(lastMove.getEndPosition(),null);
+                        }
+                    }
+                }
                 // Promotion check.
                 if (move.getPromotionPiece() != null){
                     piece = new ChessPiece(piece.getTeamColor(),move.getPromotionPiece());
@@ -247,6 +256,9 @@ public class ChessGame {
                 } else {
                     setTeamTurn(TeamColor.WHITE);
                 }
+
+                lastMove = move; // need to update to the most recent move.
+
                 return;
             }
         }
