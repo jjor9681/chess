@@ -160,16 +160,40 @@ public class ChessGame {
                     int adjacentDistance = lastMove.getEndPosition().getRow() - startPosition.getRow();
                     int strikingDistance = Math.abs(lastMove.getEndPosition().getColumn() - startPosition.getColumn());
                     if (enemyRowMovement == 2){ // Enemy pawn double moved.
-                        if (adjacentDistance == 0){ // Pawns on the same row.
+                        if (adjacentDistance == 0) { // Pawns on the same row.
                             if (strikingDistance == 1) { // Pawns are side by side.
                                 // Okay we know that the pawns meet the enPassant conditions.
                                 // Now I need to check behind the enemy pawn and make sure
                                 // that the square there is empty.
                                 // Actually, sike! I know the square there is empty because the pawn wouldn't
                                 // have been able to double move.
+                                int newRow;
+                                if (piece.getTeamColor() == TeamColor.WHITE){
+                                    newRow = 6;
+                                } else {
+                                    newRow = 3;
+                                }
+                                int newCol = lastMove.getEndPosition().getColumn();
 
+                                //Combine for the new chess position.
+                                ChessPosition enPassantEndPosition = new ChessPosition(newRow,newCol);
+                                ChessMove enPassant = new ChessMove(startPosition, enPassantEndPosition, null); // There won't ever be a promotion on this move.
+
+                                // Now I should simulate the move and see if it puts me in check.
+                                ChessPosition dyingPawnPosition = lastMove.getEndPosition();
+                                board.addPiece(startPosition,null);
+                                board.addPiece(dyingPawnPosition, null);
+                                board.addPiece(enPassantEndPosition, piece);
+
+                                // If not in check, en passant is valid!
+                                if (!isInCheck(piece.getTeamColor())){
+                                    validMoves.add(enPassant);
+                                }
+                                board.addPiece(startPosition,piece);
+                                board.addPiece(dyingPawnPosition, possiblePawn);
+                                board.addPiece(enPassantEndPosition, null);
                             }
-
+                        }
                     }
                 }
             }
