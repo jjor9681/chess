@@ -199,6 +199,10 @@ public class ChessGame {
             }
         }
 
+        if (piece.getPieceType() == ChessPiece.PieceType.KING){
+
+        }
+
 
 
         return validMoves;
@@ -258,6 +262,32 @@ public class ChessGame {
                 }
 
                 lastMove = move; // need to update to the most recent move.
+
+                // CASTLING fields update
+                //  the king moved, then let's make his castling ability false.
+                if (piece.getPieceType() == ChessPiece.PieceType.KING){
+                    if (piece.getTeamColor() == TeamColor.WHITE){
+                        whiteKingCanCastle = false;
+                    } else {
+                        blackKingCanCastle = false;
+                    }
+                }
+                // If a rook has moved, it can no longer castle with the king.
+                if (piece.getPieceType() == ChessPiece.PieceType.ROOK){
+                    if (move.getStartPosition().getColumn() == 1){
+                        whiteLeftRookCanCastle = false;
+                    }
+                    else if (move.getStartPosition().getColumn() == 8){
+                        whiteRightRookCanCastle = false;
+                    }
+                } else {
+                    if (move.getStartPosition().getColumn() == 1){
+                        blackLeftRookCanCastle = false;
+                    }
+                    else if (move.getStartPosition().getColumn() == 8){
+                        blackRightRookCanCastle = false;
+                    }
+                }
 
                 return;
             }
