@@ -215,16 +215,46 @@ public class ChessGame {
                             ChessPosition leftTwo = new ChessPosition(1,2);
                             ChessPosition leftThree = new ChessPosition(1,3);
                             ChessPosition leftFour = new ChessPosition(1,4);
-                            if (board.getPiece(leftTwo) == null && board.getPiece(leftThree) == null && board.getPiece(leftFour) == null){
-
+                            if (board.getPiece(leftTwo) == null && board.getPiece(leftThree) == null && board.getPiece(leftFour) == null){ // Row is empty. Now time to simulate checks.
+                                board.addPiece(startPosition, null);
+                                board.addPiece(leftFour, piece);
+                                if (!isInCheck(piece.getTeamColor())) {
+                                    board.addPiece(leftFour, null);
+                                    board.addPiece(leftThree, piece);
+                                    if (!isInCheck(piece.getTeamColor())) {
+                                        validMoves.add(new ChessMove(startPosition, leftThree, null));
+                                        board.addPiece(leftThree, null);
+                                        board.addPiece(startPosition, piece);
+                                    } else {
+                                        board.addPiece(leftThree, null);
+                                    }
+                                } else {
+                                    board.addPiece(leftFour, null);
+                                }
+                                board.addPiece(startPosition, piece);
                             }
                         }
                         if (whiteRightRookCanCastle) {
                             // are the in between squares all empty?
                             ChessPosition rightSix = new ChessPosition(1,6);
                             ChessPosition rightSeven = new ChessPosition(1,7);
-                            if (board.getPiece(rightSeven) == null && board.getPiece(rightSix) == null){
-
+                            if (board.getPiece(rightSeven) == null && board.getPiece(rightSix) == null){ // Row is empty. Now time to simulate checks.
+                                board.addPiece(startPosition, null);
+                                board.addPiece(rightSix, piece);
+                                if (!isInCheck(piece.getTeamColor())) {
+                                    board.addPiece(rightSix, null);
+                                    board.addPiece(rightSeven, piece);
+                                    if (!isInCheck(piece.getTeamColor())) {
+                                        validMoves.add(new ChessMove(startPosition, rightSeven, null));
+                                        board.addPiece(rightSeven, null);
+                                        board.addPiece(startPosition, piece);
+                                    } else {
+                                        board.addPiece(rightSeven, null);
+                                    }
+                                } else {
+                                    board.addPiece(rightSix, null);
+                                }
+                                board.addPiece(startPosition, piece);
                             }
                         }
                     }
@@ -235,16 +265,46 @@ public class ChessGame {
                             ChessPosition leftTwo = new ChessPosition(8,2);
                             ChessPosition leftThree = new ChessPosition(8,3);
                             ChessPosition leftFour = new ChessPosition(8,4);
-                            if (board.getPiece(leftTwo) == null && board.getPiece(leftThree) == null && board.getPiece(leftFour) == null){
-
+                            if (board.getPiece(leftTwo) == null && board.getPiece(leftThree) == null && board.getPiece(leftFour) == null){ // Row is empty. Now time to simulate checks.
+                                board.addPiece(startPosition, null);
+                                board.addPiece(leftFour, piece);
+                                if (!isInCheck(piece.getTeamColor())) {
+                                    board.addPiece(leftFour, null);
+                                    board.addPiece(leftThree, piece);
+                                    if (!isInCheck(piece.getTeamColor())) {
+                                        validMoves.add(new ChessMove(startPosition, leftThree, null));
+                                        board.addPiece(leftThree, null);
+                                        board.addPiece(startPosition, piece);
+                                    } else {
+                                        board.addPiece(leftThree, null);
+                                    }
+                                } else {
+                                    board.addPiece(leftFour, null);
+                                }
+                                board.addPiece(startPosition, piece);
                             }
                         }
                         if (blackRightRookCanCastle) {
                             // are the in between squares all empty?
                             ChessPosition rightSix = new ChessPosition(8,6);
                             ChessPosition rightSeven = new ChessPosition(8,7);
-                            if (board.getPiece(rightSeven) == null && board.getPiece(rightSix) == null){
-
+                            if (board.getPiece(rightSeven) == null && board.getPiece(rightSix) == null){ // Row is empty. Now time to simulate checks.
+                                board.addPiece(startPosition, null);
+                                board.addPiece(rightSix, piece);
+                                if (!isInCheck(piece.getTeamColor())) {
+                                    board.addPiece(rightSix, null);
+                                    board.addPiece(rightSeven, piece);
+                                    if (!isInCheck(piece.getTeamColor())) {
+                                        validMoves.add(new ChessMove(startPosition, rightSeven, null));
+                                        board.addPiece(rightSeven, null);
+                                        board.addPiece(startPosition, piece);
+                                    } else {
+                                        board.addPiece(rightSeven, null);
+                                    }
+                                } else {
+                                    board.addPiece(rightSix, null);
+                                }
+                                board.addPiece(startPosition, piece);
                             }
                         }
                     }
@@ -312,7 +372,7 @@ public class ChessGame {
 
                 lastMove = move; // need to update to the most recent move.
 
-                // CASTLING fields update
+                // okay just need a last minute section for updating fields.
                 //  the king moved, then let's make his castling ability false.
                 if (piece.getPieceType() == ChessPiece.PieceType.KING){
                     if (piece.getTeamColor() == TeamColor.WHITE){
@@ -322,6 +382,7 @@ public class ChessGame {
                     }
                 }
                 // If a rook has moved, it can no longer castle with the king.
+
                 if (piece.getPieceType() == ChessPiece.PieceType.ROOK && piece.getTeamColor() == TeamColor.WHITE){
                     if (move.getStartPosition().getColumn() == 1){
                         whiteLeftRookCanCastle = false;
@@ -338,7 +399,7 @@ public class ChessGame {
                     }
                 }
                 // Now I am worried about someone promoting to a rook, and then moving it to a square that can castle.
-                // If a square is ever captured, then this can happen. So I need to update the fields when a corner Rook gets captured.
+                // If a corner square is ever captured, then this can happen. So I need to update the fields when a corner Rook gets captured.
                 if (move.getEndPosition().getRow() == 1 && move.getEndPosition().getColumn() == 1){
                     whiteLeftRookCanCastle = false;
                 }
