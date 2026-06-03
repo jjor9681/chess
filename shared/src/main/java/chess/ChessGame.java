@@ -348,6 +348,7 @@ public class ChessGame {
                 piece = board.getPiece(move.getStartPosition());
                 board.addPiece(move.getStartPosition(),null);
 
+                // Check for en passant.
                 if (piece.getPieceType() == ChessPiece.PieceType.PAWN){
                     // I need to know if the pawn is moving to an empty square and if the movement is diagonal.
                     if (board.getPiece(move.getEndPosition()) == null){ // Empty square, now are we moving diagonally?
@@ -361,6 +362,59 @@ public class ChessGame {
                 if (move.getPromotionPiece() != null){
                     piece = new ChessPiece(piece.getTeamColor(),move.getPromotionPiece());
                 }
+
+                // Castling
+                if (piece.getPieceType() == ChessPiece.PieceType.KING){ // The piece being moved is a king.
+                    if (move.getStartPosition().getColumn() == 5 && move.getEndPosition().getColumn() == 7){ // Castling Right
+                        if (piece.getTeamColor() == ChessGame.TeamColor.WHITE){ // White king castling
+                            //Remove both the King and the Rook.
+                            ChessPosition oldRook = new ChessPosition(1,8);
+                            board.addPiece(oldRook,null);
+                            ChessPosition oldKing = new ChessPosition(1,5);
+                            board.addPiece(oldKing,null);
+                            // Place new rook.
+                            ChessPosition newRookPosition = new ChessPosition(1,6);
+                            ChessPiece newRook = new ChessPiece(TeamColor.WHITE,ChessPiece.PieceType.ROOK);
+                            board.addPiece(newRookPosition,newRook);
+                        } else { // Black king castling
+                            //Remove both the King and the Rook.
+                            ChessPosition oldRook = new ChessPosition(8,8);
+                            board.addPiece(oldRook,null);
+                            ChessPosition oldKing = new ChessPosition(8,5);
+                            board.addPiece(oldKing,null);
+                            // Place new rook.
+                            ChessPosition newRookPosition = new ChessPosition(8,6);
+                            ChessPiece newRook = new ChessPiece(TeamColor.WHITE,ChessPiece.PieceType.ROOK);
+                            board.addPiece(newRookPosition,newRook);
+                        }
+                    }
+                    else if (move.getStartPosition().getColumn() == 5 && move.getEndPosition().getColumn() == 3){ // Castling left
+                        if (piece.getTeamColor() == ChessGame.TeamColor.WHITE){ // white king castling
+                            //Remove both the King and the Rook.
+                            ChessPosition oldRook = new ChessPosition(1,1);
+                            board.addPiece(oldRook,null);
+                            ChessPosition oldKing = new ChessPosition(1,5);
+                            board.addPiece(oldKing,null);
+                            // Place new rook.
+                            ChessPosition newRookPosition = new ChessPosition(1,4);
+                            ChessPiece newRook = new ChessPiece(TeamColor.WHITE,ChessPiece.PieceType.ROOK);
+                            board.addPiece(newRookPosition,newRook);
+                        } else { // black king castling.
+                            //Remove both the King and the Rook.
+                            ChessPosition oldRook = new ChessPosition(8,1);
+                            board.addPiece(oldRook,null);
+                            ChessPosition oldKing = new ChessPosition(8,4);
+                            board.addPiece(oldKing,null);
+                            // Place new rook.
+                            ChessPosition newRookPosition = new ChessPosition(1,4);
+                            ChessPiece newRook = new ChessPiece(TeamColor.WHITE,ChessPiece.PieceType.ROOK);
+                            board.addPiece(newRookPosition,newRook);
+                        }
+                    }
+
+                }
+
+                // This also places a castling king and an en passanting pawn, so I don't need to include those in the above blocks.
                 board.addPiece(move.getEndPosition(),piece);
 
                 // Switch Turns
