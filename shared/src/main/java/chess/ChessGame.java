@@ -369,46 +369,46 @@ public class ChessGame {
                         if (piece.getTeamColor() == ChessGame.TeamColor.WHITE){ // White king castling
                             //Remove both the King and the Rook.
                             ChessPosition oldRook = new ChessPosition(1,8);
+                            ChessPiece rook = board.getPiece(oldRook);
                             board.addPiece(oldRook,null);
                             ChessPosition oldKing = new ChessPosition(1,5);
                             board.addPiece(oldKing,null);
                             // Place new rook.
                             ChessPosition newRookPosition = new ChessPosition(1,6);
-                            ChessPiece newRook = new ChessPiece(TeamColor.WHITE,ChessPiece.PieceType.ROOK);
-                            board.addPiece(newRookPosition,newRook);
+                            board.addPiece(newRookPosition,rook);
                         } else { // Black king castling
                             //Remove both the King and the Rook.
                             ChessPosition oldRook = new ChessPosition(8,8);
+                            ChessPiece rook = board.getPiece(oldRook);
                             board.addPiece(oldRook,null);
                             ChessPosition oldKing = new ChessPosition(8,5);
                             board.addPiece(oldKing,null);
                             // Place new rook.
                             ChessPosition newRookPosition = new ChessPosition(8,6);
-                            ChessPiece newRook = new ChessPiece(TeamColor.BLACK,ChessPiece.PieceType.ROOK);
-                            board.addPiece(newRookPosition,newRook);
+                            board.addPiece(newRookPosition,rook);
                         }
                     }
                     else if (move.getStartPosition().getColumn() == 5 && move.getEndPosition().getColumn() == 3){ // Castling left
                         if (piece.getTeamColor() == ChessGame.TeamColor.WHITE){ // white king castling
                             //Remove both the King and the Rook.
                             ChessPosition oldRook = new ChessPosition(1,1);
+                            ChessPiece rook = board.getPiece(oldRook);
                             board.addPiece(oldRook,null);
                             ChessPosition oldKing = new ChessPosition(1,5);
                             board.addPiece(oldKing,null);
                             // Place new rook.
                             ChessPosition newRookPosition = new ChessPosition(1,4);
-                            ChessPiece newRook = new ChessPiece(TeamColor.WHITE,ChessPiece.PieceType.ROOK);
-                            board.addPiece(newRookPosition,newRook);
+                            board.addPiece(newRookPosition,rook);
                         } else { // black king castling.
                             //Remove both the King and the Rook.
                             ChessPosition oldRook = new ChessPosition(8,1);
+                            ChessPiece rook = board.getPiece(oldRook);
                             board.addPiece(oldRook,null);
                             ChessPosition oldKing = new ChessPosition(8,5);
                             board.addPiece(oldKing,null);
                             // Place new rook.
                             ChessPosition newRookPosition = new ChessPosition(8,4);
-                            ChessPiece newRook = new ChessPiece(TeamColor.BLACK,ChessPiece.PieceType.ROOK);
-                            board.addPiece(newRookPosition,newRook);
+                            board.addPiece(newRookPosition,rook);
                         }
                     }
 
