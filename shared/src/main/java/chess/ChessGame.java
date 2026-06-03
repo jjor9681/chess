@@ -403,10 +403,10 @@ public class ChessGame {
                             //Remove both the King and the Rook.
                             ChessPosition oldRook = new ChessPosition(8,1);
                             board.addPiece(oldRook,null);
-                            ChessPosition oldKing = new ChessPosition(8,4);
+                            ChessPosition oldKing = new ChessPosition(8,5);
                             board.addPiece(oldKing,null);
                             // Place new rook.
-                            ChessPosition newRookPosition = new ChessPosition(1,4);
+                            ChessPosition newRookPosition = new ChessPosition(8,4);
                             ChessPiece newRook = new ChessPiece(TeamColor.BLACK,ChessPiece.PieceType.ROOK);
                             board.addPiece(newRookPosition,newRook);
                         }
