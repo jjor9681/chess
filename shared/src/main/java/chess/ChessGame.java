@@ -208,7 +208,7 @@ public class ChessGame {
             // 5. If that's all good, then the king can castle!
 
             if (!isInCheck(piece.getTeamColor())){
-                if (piece.getTeamColor() == TeamColor.WHITE){ // White's piece.
+                if (piece.getTeamColor() == TeamColor.WHITE && startPosition.equals(new ChessPosition(1, 5))){ // White's piece.
                     if (whiteKingCanCastle) { // King has not moved.
                         if (whiteLeftRookCanCastle){
                             // are the in between squares all empty?
@@ -258,7 +258,7 @@ public class ChessGame {
                             }
                         }
                     }
-                } else { // Black's piece.
+                } else if (startPosition.equals(new ChessPosition(8, 5))){ // Black's piece.
                     if (blackKingCanCastle) { // King has not moved.
                         if (blackLeftRookCanCastle){
                             // are the in between squares all empty?
