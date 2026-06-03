@@ -384,7 +384,7 @@ public class ChessGame {
                             board.addPiece(oldKing,null);
                             // Place new rook.
                             ChessPosition newRookPosition = new ChessPosition(8,6);
-                            ChessPiece newRook = new ChessPiece(TeamColor.WHITE,ChessPiece.PieceType.ROOK);
+                            ChessPiece newRook = new ChessPiece(TeamColor.BLACK,ChessPiece.PieceType.ROOK);
                             board.addPiece(newRookPosition,newRook);
                         }
                     }
@@ -407,7 +407,7 @@ public class ChessGame {
                             board.addPiece(oldKing,null);
                             // Place new rook.
                             ChessPosition newRookPosition = new ChessPosition(1,4);
-                            ChessPiece newRook = new ChessPiece(TeamColor.WHITE,ChessPiece.PieceType.ROOK);
+                            ChessPiece newRook = new ChessPiece(TeamColor.BLACK,ChessPiece.PieceType.ROOK);
                             board.addPiece(newRookPosition,newRook);
                         }
                     }
