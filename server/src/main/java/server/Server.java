@@ -11,6 +11,9 @@ public class Server {
 
         // Register your endpoints and exception handlers here.
 
+        // Okay i am looking through petshop and the textbook to make sure I understand how things work.
+        // The lecture videos were good and helped a lot.
+
     }
 
     public int run(int desiredPort) {
