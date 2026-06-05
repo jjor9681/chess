@@ -18,6 +18,8 @@ public class Server {
         // I can also go and add all those folders across the project that are going to
         // be required later in the project.
 
+        // Refering back to my project 2 to understand what I need to do.
+
     }
 
     public int run(int desiredPort) {
