@@ -1,4 +1,6 @@
 package model;
 
-public record NewPlayer() {
-}
+public record NewPlayer(
+        String playerColor,
+        int gameID
+) {}
