@@ -10,7 +10,7 @@ public class MemoryUserDAO implements UserDAO {
 
     @Override
     public void clear() throws DataAccessException {
-
+        users.clear();
     }
 
     @Override
@@ -23,6 +23,6 @@ public class MemoryUserDAO implements UserDAO {
 
     @Override
     public UserData getUser(String username) throws DataAccessException {
-        return users.get(username); // Hashmap will return null so I can use this for registration.
+        return users.get(username); // Hashmap will return null if a user is missing so I can use this for registration.
     }
 }
