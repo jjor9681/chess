@@ -3,6 +3,7 @@ package server;
 import com.google.gson.Gson;
 import io.javalin.*;
 import dataaccess.*;
+import model.AuthData;
 import model.UserData;
 import service.*;
 
@@ -20,8 +21,22 @@ public class Server {
     public Server() {
         javalin = Javalin.create(config -> config.staticFiles.add("web"));
         javalin.post("/user", ctx -> { // This is a lot of pet shop copy paste and stack overflow examples. Using a lambda just like lecture.
-            UserData userData = gson.fromJson(ctx.body(), UserData.class);
 
+            try {
+
+                UserData userData = gson.fromJson(ctx.body(), UserData.class);
+                AuthData authData = userService.register(userData);
+                ctx.result(gson.toJson(authData));
+            }
+            catch (BadRequestException ex){ // Basing my exception logic on the phase three documentation.
+
+            }
+            catch (AlreadyTakenException ex){
+
+            }
+            catch (Exception ex){
+
+            }
         });
 
     }
