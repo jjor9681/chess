@@ -5,6 +5,7 @@ import io.javalin.*;
 import dataaccess.*;
 import model.AuthData;
 import model.GameData;
+import model.NewPlayer;
 import model.UserData;
 import service.*;
 
@@ -135,8 +136,8 @@ public class Server {
         javalin.put("/game", ctx -> {
             try {
                 String authToken = ctx.header("Authorization");
-                GameData gameData = gson.fromJson(ctx.body(), GameData.class);
-                gameService.joinGame(authToken, gameData.whiteUsername(), gameData.gameID());
+                NewPlayer newPlayer = gson.fromJson(ctx.body(), NewPlayer.class);
+                gameService.joinGame(authToken, newPlayer.playerColor(), newPlayer.gameID());
                 ctx.status(200);
             }
             catch (BadRequestException ex) {
