@@ -32,7 +32,7 @@ public class UserService {
             throw new AlreadyTakenException("Error: already taken");
         }
 
-        // Username passed security. It can go to the database.
+        // Username passed security. (The username is available.)
         userDAO.createUser(userData);
 
         // Time to return an authToken. This was in the phase instructions.
