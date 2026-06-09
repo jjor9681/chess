@@ -1,7 +1,6 @@
 package dataaccess;
 
 import model.UserData;
-import org.eclipse.jetty.server.Authentication;
 
 import java.util.HashMap;
 
@@ -23,7 +22,7 @@ public class MemoryUserDAO implements UserDAO {
     }
 
     @Override
-    public void getUser(String username) throws DataAccessException {
-
+    public UserData getUser(String username) throws DataAccessException {
+        return users.get(username); // Hashmap will return null so I can use this for registration.
     }
 }
