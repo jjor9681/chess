@@ -14,7 +14,7 @@ public class MemoryUserDAO implements UserDAO {
     }
 
     @Override
-    public void createUser(UserData user) throws DataAccessException {
+    public void createUser(UserData user) throws DataAccessException { // I will not be checking for duplicates here.
 
         String username = user.username();
 
