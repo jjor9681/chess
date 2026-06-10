@@ -17,7 +17,6 @@ public class JoinGame implements Handler {
     public JoinGame(GameService gameService) {
         this.gameService = gameService;
     }
-
     @Override
     public void handle(Context ctx) {
         try {
@@ -28,19 +27,19 @@ public class JoinGame implements Handler {
         }
         catch (BadRequestException ex) {
             ctx.status(400);
-            ctx.json(Map.of("message", ex.getMessage()));
+            ctx.result(gson.toJson(Map.of("message", ex.getMessage())));
         }
         catch (UnauthorizedException ex) {
             ctx.status(401);
-            ctx.json(Map.of("message", ex.getMessage()));
+            ctx.result(gson.toJson(Map.of("message", ex.getMessage())));
         }
         catch (AlreadyTakenException ex) {
             ctx.status(403);
-            ctx.json(Map.of("message", ex.getMessage()));
+            ctx.result(gson.toJson(Map.of("message", ex.getMessage())));
         }
         catch (Exception ex) {
             ctx.status(500);
-            ctx.json(Map.of("message", ex.getMessage()));
+            ctx.result(gson.toJson(Map.of("message", ex.getMessage())));
         }
     }
 }
