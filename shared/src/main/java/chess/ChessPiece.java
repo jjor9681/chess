@@ -19,19 +19,19 @@ public class ChessPiece {
 
     // To help my code pass the coding check,
     // I can use the same strategy we used in ECEn 340 for the piece movements.
-    private static final int[][] bishopDiagonal = {
+    private static final int[][] BISHOP_DIAGONAL = {
             {1, 1},
             {-1, 1},
             {-1, -1},
             {1, -1}
     };
-    private static final int[][] rookHorizontalPlusVertical = {
+    private static final int[][] ROOK_HORIZONTAL_PLUS_VERTICAL = {
             {0, -1},
             {0, 1},
             {-1, 0},
             {1, 0}
     };
-    private static final int[][] queenBishopRookCombo = {
+    private static final int[][] QUEEN_BISHOP_ROOK_COMBO = {
             {1, 1},
             {-1, 1},
             {-1, -1},
@@ -41,7 +41,7 @@ public class ChessPiece {
             {-1, 0},
             {1, 0}
     };
-    private static final int[][] kingMove = {
+    private static final int[][] KING_MOVE = {
             {-1, -1},
             {-1, 0},
             {-1, 1},
@@ -51,7 +51,7 @@ public class ChessPiece {
             {1, 0},
             {1, 1}
     };
-    private static final int[][] knightMove = {
+    private static final int[][] KNIGHT_MOVE = {
             {-2, -1},
             {-2, 1},
             {-1, -2},
@@ -153,27 +153,27 @@ public class ChessPiece {
         ChessPiece piece = board.getPiece(myPosition);
         List<ChessMove> validMoves = new ArrayList<>(); // According to stack overflow, lists are made like this.
         if (type == PieceType.BISHOP) {
-            bishopRookQueenMoves(board, myPosition, validMoves, bishopDiagonal);
+            bishopRookQueenMoves(board, myPosition, validMoves, BISHOP_DIAGONAL);
             return validMoves;
         }
 
         if (type == PieceType.ROOK) {
-            bishopRookQueenMoves(board, myPosition, validMoves, rookHorizontalPlusVertical);
+            bishopRookQueenMoves(board, myPosition, validMoves, ROOK_HORIZONTAL_PLUS_VERTICAL);
             return validMoves;
         }
 
         if (type == PieceType.QUEEN) {
-            bishopRookQueenMoves(board, myPosition, validMoves, queenBishopRookCombo);
+            bishopRookQueenMoves(board, myPosition, validMoves, QUEEN_BISHOP_ROOK_COMBO);
             return validMoves;
         }
 
         if (type == PieceType.KING) {
-            kingKnightMoves(board, myPosition, validMoves, kingMove);
+            kingKnightMoves(board, myPosition, validMoves, KING_MOVE);
             return validMoves;
         }
 
         if (type == PieceType.KNIGHT) {
-            kingKnightMoves(board, myPosition, validMoves, knightMove);
+            kingKnightMoves(board, myPosition, validMoves, KNIGHT_MOVE);
             return validMoves;
         }
 
