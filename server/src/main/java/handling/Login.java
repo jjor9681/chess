@@ -18,6 +18,11 @@ public class Login implements Handler {
         this.userService = userService;
     }
 
+    private void serverError(Context ctx, Exception ex, int status) {
+        ctx.status(status);
+        ctx.json(gson.toJson(Map.of("message", ex.getMessage())));
+    }
+
     @Override
     public void handle(Context ctx) {
         try {
@@ -27,16 +32,13 @@ public class Login implements Handler {
             ctx.result(gson.toJson(authData));
         }
         catch (BadRequestException ex) {
-            ctx.status(400);
-            ctx.result(gson.toJson(Map.of("message", ex.getMessage())));
+            serverError(ctx, ex, 400);
         }
         catch (UnauthorizedException ex) {
-            ctx.status(401);
-            ctx.result(gson.toJson(Map.of("message", ex.getMessage())));
+            serverError(ctx, ex, 401);
         }
         catch (Exception ex) {
-            ctx.status(500);
-            ctx.result(gson.toJson(Map.of("message", ex.getMessage())));
+            serverError(ctx, ex, 400);
         }
     }
 }
