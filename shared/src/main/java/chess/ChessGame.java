@@ -96,11 +96,25 @@ public class ChessGame {
                 }
                 Collection<ChessMove> moves = validMoves(position);
                 if (!moves.isEmpty()) {
-                    return true;
+                    return false;
                 }
             }
         }
-        return false;
+        return true;
+    }
+
+    private boolean kingIsSafe(
+            ChessPosition start,
+            ChessPosition end,
+            ChessPiece movingPiece,
+            ChessPiece capturedPiece
+    ) {
+        board.addPiece(start, null);
+        board.addPiece(end, movingPiece);
+        boolean kingIsSafe = !isInCheck(movingPiece.getTeamColor());
+        board.addPiece(start, movingPiece);
+        board.addPiece(end, capturedPiece);
+        return kingIsSafe;
     }
 
 
@@ -148,27 +162,14 @@ public class ChessGame {
             ChessPiece testPiece = board.getPiece(startPosition);
             ChessPiece enemyPiece = board.getPiece(endPosition);
 
-            // Okie dokie, now we make the move.
-            // Pick up the old piece.
-            board.addPiece(startPosition,null);
-            // Place down the new one.
-            board.addPiece(endPosition, testPiece);
-
-            // High key there is a moment above where the piece does not exist for a moment.
-            // I have to choose between that or having two of the same piece at the same time.
-            // not sure if it matters but this is a note to my future self if problems like that occur.
-
-            // Okay, now if we are NOT in check, let's add safeMove to validMoves.
-            if (!isInCheck(testPiece.getTeamColor())){
+            if (kingIsSafe(
+                    startPosition,
+                    endPosition,
+                    testPiece,
+                    enemyPiece
+            )) {
                 validMoves.add(safeMove);
             }
-
-            // Time to restore the board.
-            board.addPiece(startPosition, testPiece);
-            board.addPiece(endPosition, enemyPiece);
-
-            // Another note to my future self. Not totally sure if enemyPiece ends up being null
-            // what will end up happening. Hopefully it just works.
 
         }
         // En passant extra credit
@@ -587,7 +588,7 @@ public class ChessGame {
         if (!isInCheck(teamColor)) {
             return false;
         }
-        return !teamHasLegalMoves(teamColor); // Fancy writing if I do say so myself
+        return teamHasLegalMoves(teamColor); // Fancy writing if I do say so myself
     }
 
     /**
@@ -602,7 +603,7 @@ public class ChessGame {
         if (isInCheck(teamColor)) {
             return false;
         }
-        return !teamHasLegalMoves(teamColor);
+        return teamHasLegalMoves(teamColor);
     }
 
     /**
