@@ -16,7 +16,7 @@ public class GameService {
 
     // Stack overflow has an example with an incrementing field that is used to make ID's for long lists.
     // I'll use the same concept for making game ID's.
-    private int gameID_Assignment = 1;
+    private int gameIDAssignment = 1;
 
     public GameService(GameDAO gameDataAccessObject, AuthDAO authDataAccessObject) {
         this.gameDAO = gameDataAccessObject;
@@ -45,14 +45,20 @@ public class GameService {
         }
 
         ChessGame chessGame = new ChessGame();
-        int gameID = gameID_Assignment++;
+        int gameID = gameIDAssignment++;
         GameData gameData = new GameData(gameID, null,null,gameName,chessGame);
         gameDAO.createGame(gameData);
 
         return gameID;
     }
 
-    public void joinGame(String authToken, String playerColor, int gameID) throws UnauthorizedException, BadRequestException, AlreadyTakenException, DataAccessException {
+    public void joinGame(String authToken,
+                         String playerColor,
+                         int gameID
+                )   throws UnauthorizedException,
+                    BadRequestException,
+                    AlreadyTakenException,
+                    DataAccessException {
 
         AuthData authData = authDAO.getAuth(authToken);
         if (authData == null) {
