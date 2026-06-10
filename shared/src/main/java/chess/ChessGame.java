@@ -541,16 +541,12 @@ public class ChessGame {
                 // I need to store the moves and check them all somehow.
                 Collection<ChessMove> attacks = enemy.pieceMoves(board,location);
 
-                // Okay I have all their moves, but how do I access the collection?
-                // Okay the collections.md lecture has an example of how to access
-                // "mountains" ... It is "for(var m: mountains){print (m);}" and that gets them all.
-                // I can do the same thing I bet...
+                // Using mountains example from lecture, for loops can get everything in a collection one at a time.
                 for (var move: attacks){
                     if (move.getEndPosition().equals(kingCurrentLocation)){ // Not sure why .equals works here and not anywhere else.
                         return true;
                     }
                 }
-
             }
         }
         return false;

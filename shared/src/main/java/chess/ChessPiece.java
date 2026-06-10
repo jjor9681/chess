@@ -17,6 +17,50 @@ public class ChessPiece {
     private final ChessGame.TeamColor pieceColor;
     private final PieceType type;
 
+    // To help my code pass the coding check,
+    // I can use the same strategy we used in ECEn 340 for the piece movements.
+    private static final int[][] bishopDiagonal = {
+            {1, 1},
+            {-1, 1},
+            {-1, -1},
+            {1, -1}
+    };
+    private static final int[][] rookHorizontalPlusVertical = {
+            {0, -1},
+            {0, 1},
+            {-1, 0},
+            {1, 0}
+    };
+    private static final int[][] queenBishopRookCombo = {
+            {1, 1},
+            {-1, 1},
+            {-1, -1},
+            {1, -1},
+            {0, -1},
+            {0, 1},
+            {-1, 0},
+            {1, 0}
+    };
+    private static final int[][] kingMove = {
+            {-1, -1},
+            {-1, 0},
+            {-1, 1},
+            {0, -1},
+            {0, 1},
+            {1, -1},
+            {1, 0},
+            {1, 1}
+    };
+    private static final int[][] knightMove = {
+            {-2, -1},
+            {-2, 1},
+            {-1, -2},
+            {-1, 2},
+            {1, -2},
+            {1, 2},
+            {2, -1},
+            {2, 1}
+    };
     public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type) {
         this.pieceColor = pieceColor;
         this.type = type;
@@ -48,6 +92,56 @@ public class ChessPiece {
         return type;
     }
 
+    // This method is for reducing the total code in the file by reusing the same code for multiple pieces.
+    private void bishopRookQueenMoves(
+            ChessBoard board,
+            ChessPosition myPosition,
+            List<ChessMove> validMoves,
+            int[][] directions
+    ) {
+        for (int[] direction : directions) {
+            int rowChange = direction[0];
+            int colChange = direction[1];
+            int r = myPosition.getRow() + rowChange;
+            int c = myPosition.getColumn() + colChange;
+            while (r >= 1 && r <= 8 && c >= 1 && c <= 8) {
+                ChessPosition pos = new ChessPosition(r, c);
+                ChessPiece target = board.getPiece(pos);
+                if (target == null) {
+                    validMoves.add(new ChessMove(myPosition, pos, null));
+                }
+                else {
+                    if (target.getTeamColor() != pieceColor) {
+                        validMoves.add(new ChessMove(myPosition, pos, null));
+                    }
+                    break;
+                }
+                r += rowChange;
+                c += colChange;
+            }
+        }
+    }
+    private void kingKnightMoves(
+            ChessBoard board,
+            ChessPosition myPosition,
+            List<ChessMove> validMoves,
+            int[][] moves
+    ) {
+        for (int[] move : moves) {
+            int r = myPosition.getRow() + move[0];
+            int c = myPosition.getColumn() + move[1];
+            if (r < 1 || r > 8 || c < 1 || c > 8) {
+                continue;
+            }
+            ChessPosition pos = new ChessPosition(r, c);
+            ChessPiece target = board.getPiece(pos);
+            if (target == null ||
+                    target.getTeamColor() != pieceColor) {
+                validMoves.add(new ChessMove(myPosition, pos, null));
+            }
+        }
+    }
+
     /**
      * Calculates all the positions a chess piece can move to
      * Does not take into account moves that are illegal due to leaving the king in
@@ -58,222 +152,31 @@ public class ChessPiece {
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
         ChessPiece piece = board.getPiece(myPosition);
         List<ChessMove> validMoves = new ArrayList<>(); // According to stack overflow, lists are made like this.
-        if (piece.getPieceType() == PieceType.BISHOP){
-            // Okay my previous strategy sucked at detected other pieces so I am trying something else...
-
-            // for loop that point to all four corners away from the bishop.
-            for (int i = 0; i < 4; i++) {
-                int rowPath = 0;
-                int colPath = 0;
-                switch (i) {
-
-                    // North East of bishop
-                    case 0:
-                        rowPath = 1;
-                        colPath = 1;
-                        break;
-                    // South East of bishop
-                    case 1:
-                        rowPath = -1;
-                        colPath = 1;
-                        break;
-                    // South West of bishop
-                    case 2:
-                        rowPath = -1;
-                        colPath = -1;
-                        break;
-                    // North West of bishop
-                    case 3:
-                        rowPath = 1;
-                        colPath = -1;
-                        break;
-                }
-
-                int r = myPosition.getRow() + rowPath;
-                int c = myPosition.getColumn() + colPath;
-
-                // Makes sure we are not targeting out of bounds. When we do target out of bounds, or
-                // we discover a friendly/enemy, break.
-                while (r >= 1 && r <= 8 && c >= 1 && c <= 8) {
-
-                    // Make a new object real quick for where we are looking and if there is a piece there,
-                    // we are going to target it.
-                    ChessPosition pos = new ChessPosition(r, c);
-                    ChessPiece target = board.getPiece(pos);
-
-                    // If nobody is there, then we are good to go.
-                    if (target == null) {
-                        validMoves.add(new ChessMove(myPosition, pos, null));
-                    }
-                    // If there is someone there, i just gotta check if their color isn't the same.
-                    else {
-
-                        if (target.getTeamColor() != piece.getTeamColor()) {
-                            validMoves.add(new ChessMove(myPosition, pos, null));
-                        }
-                        break;
-                    }
-                    // Update target depending on the direction we are looking.
-                    r += rowPath;
-                    c += colPath;
-                }
-            }
+        if (type == PieceType.BISHOP) {
+            bishopRookQueenMoves(board, myPosition, validMoves, bishopDiagonal);
             return validMoves;
         }
-        if (piece.getPieceType() == PieceType.KING){
-            // For the king, I am thinking of a for loop that will iterate all 8 spaces around it.
-            // I can do a switch statement again for all 8 slots.
-            // Then the team color check.
-            for (int i = 0; i < 8; i++) {
 
-                // Some helper variables.
-                int rowChange = 0;
-                int colChange = 0;
-
-                switch (i) {
-
-                    case 0: // bottom-left
-                        rowChange = -1;
-                        colChange = -1;
-                        break;
-
-                    case 1: // bottom
-                        rowChange = -1;
-                        colChange = 0;
-                        break;
-
-                    case 2: // bottom-right
-                        rowChange = -1;
-                        colChange = 1;
-                        break;
-
-                    case 3: // left
-                        rowChange = 0;
-                        colChange = -1;
-                        break;
-
-                    case 4: // right
-                        rowChange = 0;
-                        colChange = 1;
-                        break;
-
-                    case 5: // top-left
-                        rowChange = 1;
-                        colChange = -1;
-                        break;
-
-                    case 6: // top
-                        rowChange = 1;
-                        colChange = 0;
-                        break;
-
-                    case 7: // top-right
-                        rowChange = 1;
-                        colChange = 1;
-                        break;
-                }
-
-                int r = myPosition.getRow() + rowChange;
-                int c = myPosition.getColumn() + colChange;
-
-                // Is the target in bounds?
-                if (r < 1 || r > 8 || c < 1 || c > 8) {
-                    continue;
-                }
-
-                // Time to check if the target at (r,c) is valid.
-                // Now I'll just do the same thing as with the bishop.
-                ChessPosition pos = new ChessPosition(r, c);
-                ChessPiece target = board.getPiece(pos);
-
-                // If nobody is there, then we are good to go.
-                if (target == null) {
-                    validMoves.add(new ChessMove(myPosition, pos, null));
-                }
-                // If there is someone there, i just gotta check if their color isn't the same.
-                else {
-
-                    if (target.getTeamColor() != piece.getTeamColor()) {
-                        validMoves.add(new ChessMove(myPosition, pos, null));
-                    }
-                }
-
-            }
+        if (type == PieceType.ROOK) {
+            bishopRookQueenMoves(board, myPosition, validMoves, rookHorizontalPlusVertical);
             return validMoves;
         }
-        if (piece.getPieceType() == PieceType.KNIGHT){
-            // This is just going to be a copy paste of the king but with different switch statements.
-            for (int i = 0; i < 8; i++) {
 
-                // helpful variables again
-                int rowChange = 0;
-                int colChange = 0;
-
-                switch (i) {
-
-                    case 0:
-                        rowChange = -2;
-                        colChange = -1;
-                        break;
-
-                    case 1:
-                        rowChange = -2;
-                        colChange = 1;
-                        break;
-
-                    case 2:
-                        rowChange = -1;
-                        colChange = -2;
-                        break;
-
-                    case 3:
-                        rowChange = -1;
-                        colChange = 2;
-                        break;
-
-                    case 4:
-                        rowChange = 1;
-                        colChange = -2;
-                        break;
-
-                    case 5:
-                        rowChange = 1;
-                        colChange = 2;
-                        break;
-
-                    case 6:
-                        rowChange = 2;
-                        colChange = -1;
-                        break;
-
-                    case 7:
-                        rowChange = 2;
-                        colChange = 1;
-                        break;
-                }
-
-                int r = myPosition.getRow() + rowChange;
-                int c = myPosition.getColumn() + colChange;
-
-                if (r < 1 || r > 8 || c < 1 || c > 8) {
-                    continue;
-                }
-
-                ChessPosition pos = new ChessPosition(r, c);
-                ChessPiece target = board.getPiece(pos);
-
-                if (target == null) {
-                    validMoves.add(new ChessMove(myPosition, pos, null));
-                }
-                else {
-                    if (target.getTeamColor() != piece.getTeamColor()) {
-                        validMoves.add(new ChessMove(myPosition, pos, null));
-                    }
-                }
-            }
-
+        if (type == PieceType.QUEEN) {
+            bishopRookQueenMoves(board, myPosition, validMoves, queenBishopRookCombo);
             return validMoves;
         }
+
+        if (type == PieceType.KING) {
+            kingKnightMoves(board, myPosition, validMoves, kingMove);
+            return validMoves;
+        }
+
+        if (type == PieceType.KNIGHT) {
+            kingKnightMoves(board, myPosition, validMoves, knightMove);
+            return validMoves;
+        }
+
         if (piece.getPieceType() == PieceType.PAWN){
             // Pawn is significantly more complicated. I'll use an if statement to separate team white and team black.
             // White pawns advance to the north. The north square needs to be empty, and the northeast/northwest
