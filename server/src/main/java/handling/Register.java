@@ -10,6 +10,7 @@ import service.AlreadyTakenException;
 import java.util.Map;
 
 public class Register implements Handler {
+
     private final UserService userService;
     private final Gson gson = new Gson();
 
@@ -21,25 +22,21 @@ public class Register implements Handler {
     public void handle(Context ctx) {
         try {
             UserData userData = gson.fromJson(ctx.body(), UserData.class);
-
             AuthData authData = userService.register(userData);
             ctx.status(200);
-            ctx.json(authData); // javalin supposedly serializes automatically so I shouldn't need any gson
+            ctx.result(gson.toJson(authData));
         }
         catch (BadRequestException ex) {
             ctx.status(400);
-            ctx.json(Map.of("message", ex.getMessage()
-            ));
+            ctx.result(gson.toJson(Map.of("message", ex.getMessage())));
         }
         catch (AlreadyTakenException ex) {
             ctx.status(403);
-            ctx.json(Map.of("message", ex.getMessage()
-            ));
+            ctx.result(gson.toJson(Map.of("message", ex.getMessage())));
         }
         catch (Exception ex) {
             ctx.status(500);
-            ctx.json(Map.of("message", ex.getMessage()
-            ));
+            ctx.result(gson.toJson(Map.of("message", ex.getMessage())));
         }
     }
 }

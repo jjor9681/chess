@@ -1,4 +1,5 @@
 package handling;
+import com.google.gson.Gson;
 import io.javalin.http.Context;
 import io.javalin.http.Handler;
 import service.UserService;
@@ -8,6 +9,7 @@ import java.util.Map;
 public class Logout implements Handler {
 
     private final UserService userService;
+    private final Gson gson = new Gson();
 
     public Logout(UserService userService) {
         this.userService = userService;
@@ -22,13 +24,11 @@ public class Logout implements Handler {
         }
         catch (UnauthorizedException ex) {
             ctx.status(401);
-            ctx.json(Map.of("message", ex.getMessage()
-            ));
+            ctx.result(gson.toJson(Map.of("message", ex.getMessage())));
         }
         catch (Exception ex) {
             ctx.status(500);
-            ctx.json(Map.of("message", ex.getMessage()
-            ));
+            ctx.result(gson.toJson(Map.of("message", ex.getMessage())));
         }
     }
 }
