@@ -142,7 +142,6 @@ public class ChessPiece {
             }
         }
     }
-
     // Avoiding duplicate code with pawn promotions
     private void addPromotionMoves(
             ChessPosition myPosition,
@@ -154,7 +153,6 @@ public class ChessPiece {
         validMoves.add(new ChessMove(myPosition, pos, PieceType.BISHOP));
         validMoves.add(new ChessMove(myPosition, pos, PieceType.KNIGHT));
     }
-
     private void addPawnMove(
             ChessPosition myPosition,
             ChessPosition pos,
@@ -166,6 +164,73 @@ public class ChessPiece {
             return;
         }
         validMoves.add(new ChessMove(myPosition, pos, null));
+    }
+    private void pawnMoves(
+            ChessBoard board,
+            ChessPosition myPosition,
+            Collection<ChessMove> validMoves,
+            int direction,
+            int startRow,
+            int promotionRow
+    ) {
+        int r = myPosition.getRow() + direction;
+        int c = myPosition.getColumn();
+        ChessPosition pos = new ChessPosition(r, c);
+        // forward move
+        if (board.getPiece(pos) == null) {
+            addPawnMove(myPosition, pos, validMoves, r == promotionRow);
+            // double move
+            if (myPosition.getRow() == startRow) {
+                ChessPosition doublePos =
+                        new ChessPosition(
+                                myPosition.getRow()
+                                        + (2 * direction), // Could be negative, so I'll use multiplication
+                                        c
+                        );
+                if (board.getPiece(doublePos) == null) {
+                    validMoves.add(new ChessMove(myPosition, doublePos, null));
+                }
+            }
+        }
+        // capture left
+        captureMove(
+                board,
+                myPosition,
+                validMoves,
+                direction,
+                -1,
+                promotionRow
+        );
+        // capture right
+        captureMove(
+                board,
+                myPosition,
+                validMoves,
+                direction,
+                1,
+                promotionRow
+        );
+    }
+
+    private void captureMove(
+            ChessBoard board,
+            ChessPosition myPosition,
+            Collection<ChessMove> validMoves,
+            int direction,
+            int columnOffset,
+            int promotionRow
+    ) {
+        int r = myPosition.getRow() + direction;
+        int c = myPosition.getColumn() + columnOffset;
+        if (c < 1 || c > 8) {
+            return;
+        }
+        ChessPosition pos = new ChessPosition(r, c);
+        ChessPiece target = board.getPiece(pos);
+        if (target != null &&
+                target.getTeamColor() != pieceColor) {
+            addPawnMove(myPosition, pos, validMoves, r == promotionRow);
+        }
     }
 
     /**
@@ -203,168 +268,32 @@ public class ChessPiece {
             return validMoves;
         }
 
-        if (piece.getPieceType() == PieceType.PAWN){
-            // Pawn is significantly more complicated. I'll use an if statement to separate team white and team black.
-            // White pawns advance to the north. The north square needs to be empty, and the northeast/northwest
-            // squares need to have an enemy. Then check if the white piece is on row 2. Then do the same thing but
-            // facing the south and checking row 7 for the double move.
+        if (type == PieceType.PAWN) {
 
-            // White pawn
-            if (piece.getTeamColor() == ChessGame.TeamColor.WHITE) {
+            int direction;
+            int startRow;
+            int promotionRow;
 
-                // Check square in front of the pawn
-                int r = myPosition.getRow() + 1;
-                int c = myPosition.getColumn();
-
-                ChessPosition pos = new ChessPosition(r, c);
-
-                // pawn can't capture forward. If something is in the way, too bad!
-                if (board.getPiece(pos) == null) {
-
-                    // Check for promo
-                    if (r == 8) {
-
-                        addPawnMove(myPosition,pos,validMoves, true);
-                    }
-                    else {
-                        addPawnMove(myPosition,pos,validMoves, false);
-                    }
-
-                    // double move
-                    if (myPosition.getRow() == 2) {
-
-                        ChessPosition doublePos = new ChessPosition(myPosition.getRow() + 2, myPosition.getColumn());
-
-                        // Both spaces must be empty.
-                        if (board.getPiece(doublePos) == null) {
-                            // Check for promo
-                            validMoves.add(new ChessMove(myPosition, doublePos, null));
-                        }
-                    }
-                }
-
-                // Check north west
-                r = myPosition.getRow() + 1;
-                c = myPosition.getColumn() - 1;
-                if (c >= 1) {
-                    pos = new ChessPosition(r, c);
-                    ChessPiece target = board.getPiece(pos);
-                    if (target != null &&
-                            target.getTeamColor() != piece.getTeamColor()) {
-
-                        // Check for promo
-                        if (r == 8) {
-                            addPawnMove(myPosition,pos,validMoves, true);
-                        }
-                        else {
-                            addPawnMove(myPosition,pos,validMoves, false);
-                        }
-                    }
-                }
-
-                // Check North East
-                r = myPosition.getRow() + 1;
-                c = myPosition.getColumn() + 1;
-
-                if (c <= 8) {
-
-                    pos = new ChessPosition(r, c);
-                    ChessPiece target = board.getPiece(pos);
-
-                    if (target != null &&
-                            target.getTeamColor() != piece.getTeamColor()) {
-
-                        // Check for promo
-                        if (r == 8) {
-
-                            addPawnMove(myPosition,pos,validMoves, true);
-                        }
-                        else {
-                            addPawnMove(myPosition,pos,validMoves, false);
-                        }
-                    }
-                }
+            if (pieceColor == ChessGame.TeamColor.WHITE) {
+                direction = 1;
+                startRow = 2;
+                promotionRow = 8;
             }
-
-            // Black pawn, basically the same as the white but towards the south.
             else {
-
-                // Check forward one square.
-                int r = myPosition.getRow() - 1;
-                int c = myPosition.getColumn();
-
-                ChessPosition pos = new ChessPosition(r, c);
-
-                if (board.getPiece(pos) == null) {
-
-                    // Check for promo
-                    if (r == 1) {
-
-                        addPawnMove(myPosition,pos,validMoves, true);
-                    }
-                    else {
-                        addPawnMove(myPosition,pos,validMoves, false);
-                    }
-
-                    // double move.
-                    if (myPosition.getRow() == 7) {
-
-                        ChessPosition doublePos = new ChessPosition(myPosition.getRow() - 2,
-                                        myPosition.getColumn());
-
-                        if (board.getPiece(doublePos) == null) {
-                            // Check for promo
-                            validMoves.add(new ChessMove(myPosition, doublePos, null));
-                        }
-                    }
-                }
-
-                // Check south west capture.
-                r = myPosition.getRow() - 1;
-                c = myPosition.getColumn() - 1;
-
-                if (c >= 1) {
-
-                    pos = new ChessPosition(r, c);
-                    ChessPiece target = board.getPiece(pos);
-
-                    if (target != null &&
-                            target.getTeamColor() != piece.getTeamColor()) {
-
-                        // Check for promo
-                        if (r == 1) {
-
-                            addPawnMove(myPosition,pos,validMoves, true);
-                        }
-                        else {
-                            addPawnMove(myPosition,pos,validMoves, false);
-                        }
-                    }
-                }
-
-                // Check south east capture.
-                r = myPosition.getRow() - 1;
-                c = myPosition.getColumn() + 1;
-
-                if (c <= 8) {
-
-                    pos = new ChessPosition(r, c);
-                    ChessPiece target = board.getPiece(pos);
-
-                    if (target != null &&
-                            target.getTeamColor() != piece.getTeamColor()) {
-
-                        // Check for promo
-                        if (r == 1) {
-
-                            addPawnMove(myPosition,pos,validMoves, true);
-                        }
-                        else {
-                            addPawnMove(myPosition,pos,validMoves, false);
-                        }
-                    }
-                }
+                direction = -1;
+                startRow = 7;
+                promotionRow = 1;
             }
+
+            pawnMoves(
+                    board,
+                    myPosition,
+                    validMoves,
+                    direction,
+                    startRow,
+                    promotionRow
+            );
+
             return validMoves;
         }
         return null;
