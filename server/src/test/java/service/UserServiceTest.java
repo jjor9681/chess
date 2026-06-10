@@ -26,14 +26,42 @@ public class UserServiceTest {
         UserData userData = new UserData("Jonas", "GreenEggsAndHam", "jonas@outlook.com");
         AuthData authData = userService.register(userData);
         assertNotNull(authData);
-        assertEquals("bob", authData.username());
+        assertEquals("Jonas", authData.username());
         assertNotNull(authData.authToken());
     }
-    // okay the
     @Test
     public void registerNegative() throws Exception {
         UserData userData = new UserData("Jonas", "GreenEggsAndHam", "jonas@outlook.com");
         userService.register(userData);
         assertThrows(AlreadyTakenException.class, () -> userService.register(userData));
     }
+
+    @Test
+    public void loginPositive() throws Exception {
+        UserData userData = new UserData("Jonas", "GreenEggsAndHam", "jonas@outlook.com");
+        userService.register(userData);
+        AuthData authData = userService.login(userData);
+        assertNotNull(authData);
+        assertEquals("Jonas", authData.username());
+        assertNotNull(authData.authToken());
+    }
+    @Test
+    public void loginNegative() throws Exception {
+        UserData realUser = new UserData("Jonas", "GreenEggsAndHam", "jonas@outlook.com");
+        userService.register(realUser);
+        UserData wrongPassword = new UserData("Jonas", "Bruh", "jonas@outlook.com");
+        assertThrows(UnauthorizedException.class, () -> userService.login(wrongPassword));
+    }
+
+    @Test
+    public void logoutPositive() throws Exception {
+        UserData userData = new UserData("Jonas", "GreenEggsAndHam", "jonas@outlook.com");
+        AuthData authData = userService.register(userData);
+        assertDoesNotThrow(() -> userService.logout(authData.authToken()));
+    }
+    @Test
+    public void logoutNegative() {
+        assertThrows(UnauthorizedException.class, () -> userService.logout("SomebodyElse'sAuthToken"));
+    }
+
 }
