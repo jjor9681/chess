@@ -65,9 +65,9 @@ public class GameService {
             throw new BadRequestException("Error: bad request");
         }
 
-        // Team white, team black, and spectators should be able to join the game. Anything else throws.
-        // I need to check null first so that there are no crashes.
-        if (playerColor!= null && !playerColor.equals("WHITE") && !playerColor.equals("BLACK")){
+        // Fixed error where I originally thought that null was okay to have and it meant spectator mode.
+        if (playerColor == null || (!playerColor.equals("WHITE") && !playerColor.equals("BLACK"))) {
+
             throw new BadRequestException("Error: bad request");
         }
 
@@ -75,12 +75,12 @@ public class GameService {
         String whiteUsername = gameData.whiteUsername();
         String blackUsername = gameData.blackUsername();
 
-        if (playerColor != null && playerColor.equals("WHITE")) {
+        if ("WHITE".equals(playerColor)) {
             if (whiteUsername != null) {
                 throw new AlreadyTakenException("Error: already taken");
             }
             whiteUsername = authData.username();
-        } else if (playerColor != null) {
+        } else {
             if (blackUsername != null) {
                 throw new AlreadyTakenException("Error: already taken");
             }
