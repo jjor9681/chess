@@ -3,12 +3,14 @@ package handling;
 import io.javalin.http.Handler;
 import service.DeleteService;
 import io.javalin.http.Context;
+import com.google.gson.Gson;
 
 import java.util.Map;
 
 public class Clear implements Handler {
 
     private final DeleteService deleteService;
+    private final Gson gson = new Gson();
 
     public Clear(DeleteService deleteService) {
         this.deleteService = deleteService;
@@ -22,7 +24,7 @@ public class Clear implements Handler {
         }
         catch (Exception ex) {
             ctx.status(500);
-            ctx.json(Map.of("message", ex.getMessage())); // I can do this instead of making a whole new class.
+            ctx.result(gson.toJson(Map.of("message", ex.getMessage())));
         }
     }
 }

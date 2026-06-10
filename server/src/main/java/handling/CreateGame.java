@@ -24,19 +24,19 @@ public class CreateGame implements Handler {
             GameData gameData = gson.fromJson(ctx.body(), GameData.class);
             int gameID = gameService.createGame(authToken, gameData.gameName());
             ctx.status(200);
-            ctx.json(Map.of("gameID", gameID));
+            ctx.result(gson.toJson(Map.of("gameID", gameID)));
         }
         catch (BadRequestException ex) {
             ctx.status(400);
-            ctx.json(Map.of("message", ex.getMessage()));
+            ctx.result(gson.toJson(Map.of("message", ex.getMessage())));
         }
         catch (UnauthorizedException ex) {
             ctx.status(401);
-            ctx.json(Map.of("message", ex.getMessage()));
+            ctx.result(gson.toJson(Map.of("message", ex.getMessage())));
         }
         catch (Exception ex) {
             ctx.status(500);
-            ctx.json(Map.of("message", ex.getMessage()));
+            ctx.result(gson.toJson(Map.of("message", ex.getMessage())));
         }
     }
 }
