@@ -61,6 +61,7 @@ public class ChessPiece {
             {2, -1},
             {2, 1}
     };
+
     public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type) {
         this.pieceColor = pieceColor;
         this.type = type;
@@ -142,6 +143,31 @@ public class ChessPiece {
         }
     }
 
+    // Avoiding duplicate code with pawn promotions
+    private void addPromotionMoves(
+            ChessPosition myPosition,
+            ChessPosition pos,
+            Collection<ChessMove> validMoves
+    ) {
+        validMoves.add(new ChessMove(myPosition, pos, PieceType.QUEEN));
+        validMoves.add(new ChessMove(myPosition, pos, PieceType.ROOK));
+        validMoves.add(new ChessMove(myPosition, pos, PieceType.BISHOP));
+        validMoves.add(new ChessMove(myPosition, pos, PieceType.KNIGHT));
+    }
+
+    private void addPawnMove(
+            ChessPosition myPosition,
+            ChessPosition pos,
+            Collection<ChessMove> validMoves,
+            boolean promotion
+    ) {
+        if (promotion) {
+            addPromotionMoves(myPosition, pos, validMoves);
+            return;
+        }
+        validMoves.add(new ChessMove(myPosition, pos, null));
+    }
+
     /**
      * Calculates all the positions a chess piece can move to
      * Does not take into account moves that are illegal due to leaving the king in
@@ -198,13 +224,10 @@ public class ChessPiece {
                     // Check for promo
                     if (r == 8) {
 
-                        validMoves.add(new ChessMove(myPosition, pos, PieceType.QUEEN));
-                        validMoves.add(new ChessMove(myPosition, pos, PieceType.ROOK));
-                        validMoves.add(new ChessMove(myPosition, pos, PieceType.BISHOP));
-                        validMoves.add(new ChessMove(myPosition, pos, PieceType.KNIGHT));
+                        addPawnMove(myPosition,pos,validMoves, true);
                     }
                     else {
-                        validMoves.add(new ChessMove(myPosition, pos, null));
+                        addPawnMove(myPosition,pos,validMoves, false);
                     }
 
                     // double move
@@ -231,14 +254,10 @@ public class ChessPiece {
 
                         // Check for promo
                         if (r == 8) {
-
-                            validMoves.add(new ChessMove(myPosition, pos, PieceType.QUEEN));
-                            validMoves.add(new ChessMove(myPosition, pos, PieceType.ROOK));
-                            validMoves.add(new ChessMove(myPosition, pos, PieceType.BISHOP));
-                            validMoves.add(new ChessMove(myPosition, pos, PieceType.KNIGHT));
+                            addPawnMove(myPosition,pos,validMoves, true);
                         }
                         else {
-                            validMoves.add(new ChessMove(myPosition, pos, null));
+                            addPawnMove(myPosition,pos,validMoves, false);
                         }
                     }
                 }
@@ -258,13 +277,10 @@ public class ChessPiece {
                         // Check for promo
                         if (r == 8) {
 
-                            validMoves.add(new ChessMove(myPosition, pos, PieceType.QUEEN));
-                            validMoves.add(new ChessMove(myPosition, pos, PieceType.ROOK));
-                            validMoves.add(new ChessMove(myPosition, pos, PieceType.BISHOP));
-                            validMoves.add(new ChessMove(myPosition, pos, PieceType.KNIGHT));
+                            addPawnMove(myPosition,pos,validMoves, true);
                         }
                         else {
-                            validMoves.add(new ChessMove(myPosition, pos, null));
+                            addPawnMove(myPosition,pos,validMoves, false);
                         }
                     }
                 }
@@ -284,13 +300,10 @@ public class ChessPiece {
                     // Check for promo
                     if (r == 1) {
 
-                        validMoves.add(new ChessMove(myPosition, pos, PieceType.QUEEN));
-                        validMoves.add(new ChessMove(myPosition, pos, PieceType.ROOK));
-                        validMoves.add(new ChessMove(myPosition, pos, PieceType.BISHOP));
-                        validMoves.add(new ChessMove(myPosition, pos, PieceType.KNIGHT));
+                        addPawnMove(myPosition,pos,validMoves, true);
                     }
                     else {
-                        validMoves.add(new ChessMove(myPosition, pos, null));
+                        addPawnMove(myPosition,pos,validMoves, false);
                     }
 
                     // double move.
@@ -321,13 +334,10 @@ public class ChessPiece {
                         // Check for promo
                         if (r == 1) {
 
-                            validMoves.add(new ChessMove(myPosition, pos, PieceType.QUEEN));
-                            validMoves.add(new ChessMove(myPosition, pos, PieceType.ROOK));
-                            validMoves.add(new ChessMove(myPosition, pos, PieceType.BISHOP));
-                            validMoves.add(new ChessMove(myPosition, pos, PieceType.KNIGHT));
+                            addPawnMove(myPosition,pos,validMoves, true);
                         }
                         else {
-                            validMoves.add(new ChessMove(myPosition, pos, null));
+                            addPawnMove(myPosition,pos,validMoves, false);
                         }
                     }
                 }
@@ -347,13 +357,10 @@ public class ChessPiece {
                         // Check for promo
                         if (r == 1) {
 
-                            validMoves.add(new ChessMove(myPosition, pos, PieceType.QUEEN));
-                            validMoves.add(new ChessMove(myPosition, pos, PieceType.ROOK));
-                            validMoves.add(new ChessMove(myPosition, pos, PieceType.BISHOP));
-                            validMoves.add(new ChessMove(myPosition, pos, PieceType.KNIGHT));
+                            addPawnMove(myPosition,pos,validMoves, true);
                         }
                         else {
-                            validMoves.add(new ChessMove(myPosition, pos, null));
+                            addPawnMove(myPosition,pos,validMoves, false);
                         }
                     }
                 }
