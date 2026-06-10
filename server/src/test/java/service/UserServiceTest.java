@@ -20,4 +20,20 @@ public class UserServiceTest {
                 authDAO
         );
     }
+
+    @Test
+    public void registerPositive() throws Exception {
+        UserData userData = new UserData("Jonas", "GreenEggsAndHam", "jonas@outlook.com");
+        AuthData authData = userService.register(userData);
+        assertNotNull(authData);
+        assertEquals("bob", authData.username());
+        assertNotNull(authData.authToken());
+    }
+    // okay the
+    @Test
+    public void registerNegative() throws Exception {
+        UserData userData = new UserData("Jonas", "GreenEggsAndHam", "jonas@outlook.com");
+        userService.register(userData);
+        assertThrows(AlreadyTakenException.class, () -> userService.register(userData));
+    }
 }
