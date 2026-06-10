@@ -1,4 +1,5 @@
 package handling;
+import com.google.gson.Gson;
 import io.javalin.http.Context;
 import io.javalin.http.Handler;
 import model.GameData;
@@ -10,6 +11,7 @@ import java.util.Map;
 public class ListGames implements Handler {
 
     private final GameService gameService;
+    private final Gson gson = new Gson();
 
     public ListGames(GameService gameService) {
         this.gameService = gameService;
@@ -21,17 +23,15 @@ public class ListGames implements Handler {
             String authToken = ctx.header("Authorization");
             Collection<GameData> games = gameService.listGames(authToken);
             ctx.status(200);
-            ctx.json(games);
+            ctx.result(gson.toJson(games));
         }
         catch (UnauthorizedException ex) {
             ctx.status(401);
-            ctx.json(Map.of("message", ex.getMessage()
-            ));
+            ctx.result(gson.toJson(Map.of("message", ex.getMessage())));
         }
         catch (Exception ex) {
             ctx.status(500);
-            ctx.json(Map.of("message", ex.getMessage()
-            ));
+            ctx.result(gson.toJson(Map.of("message", ex.getMessage())));
         }
     }
 }

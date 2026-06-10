@@ -21,22 +21,22 @@ public class Login implements Handler {
     @Override
     public void handle(Context ctx) {
         try {
-            UserData userData = gson.fromJson(ctx.body(), UserData.class); // I can't get away from gson here. Nothing on stack overflow provides any better way to do it.
+            UserData userData = gson.fromJson(ctx.body(), UserData.class);
             AuthData authData = userService.login(userData);
             ctx.status(200);
-            ctx.json(authData);
+            ctx.result(gson.toJson(authData));
         }
         catch (BadRequestException ex) {
             ctx.status(400);
-            ctx.json(Map.of("message", ex.getMessage()));
+            ctx.result(gson.toJson(Map.of("message", ex.getMessage())));
         }
         catch (UnauthorizedException ex) {
             ctx.status(401);
-            ctx.json(Map.of("message", ex.getMessage()));
+            ctx.result(gson.toJson(Map.of("message", ex.getMessage())));
         }
         catch (Exception ex) {
             ctx.status(500);
-            ctx.json(Map.of("message", ex.getMessage()));
+            ctx.result(gson.toJson(Map.of("message", ex.getMessage())));
         }
     }
 }
