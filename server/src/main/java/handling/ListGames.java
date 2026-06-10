@@ -23,7 +23,7 @@ public class ListGames implements Handler {
             String authToken = ctx.header("Authorization");
             Collection<GameData> games = gameService.listGames(authToken);
             ctx.status(200);
-            ctx.result(gson.toJson(games));
+            ctx.result(gson.toJson(Map.of("games", games)));
         }
         catch (UnauthorizedException ex) {
             ctx.status(401);
