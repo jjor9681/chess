@@ -62,7 +62,7 @@ public class Server {
         javalin.post("/user", register);
         javalin.post("/session", login);
         javalin.delete("/session", logout);
-        javalin.get("/game", listGames);
+        javalin.get("/game", listGames); // This is currently bugged and not including the right string right now.
         javalin.post("/game", createGame);
         javalin.put("/game", joinGame);
 
