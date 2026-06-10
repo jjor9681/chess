@@ -38,7 +38,7 @@ public class Login implements Handler {
             serverError(ctx, ex, 401);
         }
         catch (Exception ex) {
-            serverError(ctx, ex, 500);;
+            serverError(ctx, ex, 500);;;
         }
     }
 }
