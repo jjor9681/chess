@@ -367,17 +367,15 @@ public class ChessGame {
 
                 // Castling
                 // The piece being moved is a king.
-                if (piece.getPieceType() == ChessPiece.PieceType.KING) {
+                if (piece.getPieceType() == ChessPiece.PieceType.KING && move.getStartPosition().getColumn() == 5) {
                     int row = (piece.getTeamColor() == TeamColor.WHITE) ? 1 : 8;
-                    if (move.getStartPosition().getColumn() == 5) {
-                        // Castling Right
-                        if (move.getEndPosition().getColumn() == 7) {
-                            executeCastleRookMove(row, 8, 6);
-                        }
-                        // Castling left
-                        else if (move.getEndPosition().getColumn() == 3) {
-                            executeCastleRookMove(row, 1, 4);
-                        }
+                    // Castling Right
+                    if (move.getEndPosition().getColumn() == 7) {
+                        executeCastleRookMove(row, 8, 6);
+                    }
+                    // Castling left
+                    else if (move.getEndPosition().getColumn() == 3) {
+                        executeCastleRookMove(row, 1, 4);
                     }
                 }
 
