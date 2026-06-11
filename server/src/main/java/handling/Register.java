@@ -21,6 +21,7 @@ public class Register implements Handler {
     @Override
     public void handle(Context ctx) {
         try {
+            // which username and password should be registered
             UserData userData = gson.fromJson(ctx.body(), UserData.class);
             AuthData authData = userService.register(userData);
             ctx.status(200);
@@ -31,6 +32,7 @@ public class Register implements Handler {
             ctx.result(gson.toJson(Map.of("message", ex.getMessage())));
         }
         catch (AlreadyTakenException ex) {
+            // can't steal usernames. hit em with a 403
             ctx.status(403);
             ctx.result(gson.toJson(Map.of("message", ex.getMessage())));
         }

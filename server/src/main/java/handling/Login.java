@@ -18,6 +18,7 @@ public class Login implements Handler {
         this.userService = userService;
     }
 
+    // had to make a helper method so that I could avoid duplicate code.
     private void serverError(Context ctx, Exception ex, int status) {
         ctx.status(status);
         ctx.json(gson.toJson(Map.of("message", ex.getMessage())));
@@ -25,7 +26,7 @@ public class Login implements Handler {
 
     @Override
     public void handle(Context ctx) {
-        try {
+        try {// get username and password so i can check if they exist.
             UserData userData = gson.fromJson(ctx.body(), UserData.class);
             AuthData authData = userService.login(userData);
             ctx.status(200);

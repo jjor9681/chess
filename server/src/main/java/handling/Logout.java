@@ -17,12 +17,14 @@ public class Logout implements Handler {
 
     @Override
     public void handle(Context ctx) {
-        try {
+        try { // auth token decides who needs to be logged out
             String authToken = ctx.header("Authorization");
             userService.logout(authToken);
             ctx.status(200);
         }
         catch (UnauthorizedException ex) {
+            // not really sure what would throw this, but maybe
+            // someone tries to log out of someone else's account?
             ctx.status(401);
             ctx.result(gson.toJson(Map.of("message", ex.getMessage())));
         }

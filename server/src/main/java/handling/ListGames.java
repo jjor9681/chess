@@ -20,8 +20,10 @@ public class ListGames implements Handler {
     @Override
     public void handle(Context ctx) {
         try {
+            // grab token
             String authToken = ctx.header("Authorization");
             Collection<GameData> games = gameService.listGames(authToken);
+            // Map skips having to make any other methods, so that's high key working for me.
             ctx.status(200);
             ctx.result(gson.toJson(Map.of("games", games)));
         }
