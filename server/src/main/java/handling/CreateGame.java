@@ -20,12 +20,14 @@ public class CreateGame implements Handler {
     @Override
     public void handle(Context ctx) {
         try {
+            // get auth token and parse body so i know what game they wanna make
             String authToken = ctx.header("Authorization");
             GameData gameData = gson.fromJson(ctx.body(), GameData.class);
             int gameID = gameService.createGame(authToken, gameData.gameName());
+            // send it all back in json if it worked.
             ctx.status(200);
             ctx.result(gson.toJson(Map.of("gameID", gameID)));
-        }
+        } // if it breaks, then hopefully debugging will go easier with these
         catch (BadRequestException ex) {
             ctx.status(400);
             ctx.result(gson.toJson(Map.of("message", ex.getMessage())));
