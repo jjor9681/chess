@@ -3,7 +3,7 @@ package dataaccess;
 import model.GameData;
 
 import java.util.Collection;
-
+// just throws exceptions whenever soemthing breaks.
 public interface GameDAO {
 
     void createGame(GameData game) throws DataAccessException;

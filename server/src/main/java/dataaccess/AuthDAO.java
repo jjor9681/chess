@@ -1,7 +1,7 @@
 package dataaccess;
 
 import model.AuthData;
-
+// just throws exceptions whenever soemthing breaks.
 public interface AuthDAO {
     void createAuth(AuthData auth) throws DataAccessException;
 
