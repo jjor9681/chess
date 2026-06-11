@@ -117,6 +117,19 @@ public class ChessGame {
         return kingIsSafe;
     }
 
+    private boolean castleKingSafe(
+            ChessPosition startPosition,
+            ChessPosition temporaryPosition,
+            ChessPiece king
+    ) {
+        board.addPiece(startPosition, null);
+        board.addPiece(temporaryPosition, king);
+        boolean safe = !isInCheck(king.getTeamColor());
+        board.addPiece(temporaryPosition, null);
+        board.addPiece(startPosition, king);
+        return safe;
+    }
+
 
 
 
@@ -241,12 +254,8 @@ public class ChessGame {
                             ChessPosition leftThree = new ChessPosition(1,3);
                             ChessPosition leftFour = new ChessPosition(1,4);
                             if (board.getPiece(leftTwo) == null && board.getPiece(leftThree) == null && board.getPiece(leftFour) == null){ // Row is empty. Now time to simulate checks.
-                                board.addPiece(startPosition, null);
-                                board.addPiece(leftFour, piece);
-                                if (!isInCheck(piece.getTeamColor())) {
-                                    board.addPiece(leftFour, null);
-                                    board.addPiece(leftThree, piece);
-                                    if (!isInCheck(piece.getTeamColor())) {
+                                if (castleKingSafe(startPosition, leftFour, piece)) {
+                                    if (castleKingSafe(startPosition, leftThree, piece)) {
                                         validMoves.add(new ChessMove(startPosition, leftThree, null));
                                         board.addPiece(leftThree, null);
                                         board.addPiece(startPosition, piece);
@@ -291,12 +300,8 @@ public class ChessGame {
                             ChessPosition leftThree = new ChessPosition(8,3);
                             ChessPosition leftFour = new ChessPosition(8,4);
                             if (board.getPiece(leftTwo) == null && board.getPiece(leftThree) == null && board.getPiece(leftFour) == null){ // Row is empty. Now time to simulate checks.
-                                board.addPiece(startPosition, null);
-                                board.addPiece(leftFour, piece);
-                                if (!isInCheck(piece.getTeamColor())) {
-                                    board.addPiece(leftFour, null);
-                                    board.addPiece(leftThree, piece);
-                                    if (!isInCheck(piece.getTeamColor())) {
+                                if (castleKingSafe(startPosition, leftFour, piece)) {
+                                    if (castleKingSafe(startPosition, leftThree, piece)) {
                                         validMoves.add(new ChessMove(startPosition, leftThree, null));
                                         board.addPiece(leftThree, null);
                                         board.addPiece(startPosition, piece);
