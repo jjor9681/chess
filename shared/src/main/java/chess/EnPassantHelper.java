@@ -4,7 +4,12 @@ import java.util.Collection;
 
 public class EnPassantHelper {
 
-    public static void addEnPassant(ChessGame game, ChessPiece piece, ChessPosition startPosition, ChessMove lastMove, ChessBoard board, Collection<ChessMove> validMoves) {
+    public static void addEnPassant(ChessGame game,
+                                    ChessPiece piece,
+                                    ChessPosition startPosition,
+                                    ChessMove lastMove,
+                                    ChessBoard board,
+                                    Collection<ChessMove> validMoves) {
         // En passant extra credit
         // I need to include ChessPiece. because I am no longer in ChessPiece.java
         if (piece.getPieceType() == ChessPiece.PieceType.PAWN && lastMove != null) {
