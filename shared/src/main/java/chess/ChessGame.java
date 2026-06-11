@@ -115,7 +115,11 @@ public class ChessGame {
         return safe;
     }
 
-    private void checkAndAddCastlingMoves(Collection<ChessMove> validMoves, ChessPiece piece, ChessPosition startPosition, int row, boolean leftCastle, boolean rightCastle) {
+    private void checkAndAddCastlingMoves(Collection<ChessMove> validMoves,
+                                          ChessPiece piece,
+                                          ChessPosition startPosition,
+                                          int row, boolean leftCastle,
+                                          boolean rightCastle) {
         if (leftCastle) {
             // are the in between squares all empty?
             ChessPosition leftTwo = new ChessPosition(row, 2);
@@ -246,7 +250,9 @@ public class ChessGame {
             // Who most recently moved?
             ChessPiece possiblePawn = board.getPiece(lastMove.getEndPosition());
             // Are they an enemy pawn?
-            if (possiblePawn != null && possiblePawn.getPieceType() == ChessPiece.PieceType.PAWN && piece.getTeamColor() != possiblePawn.getTeamColor()) {
+            if (possiblePawn != null
+                    && possiblePawn.getPieceType() == ChessPiece.PieceType.PAWN
+                    && piece.getTeamColor() != possiblePawn.getTeamColor()) {
                 // okay I need to do some math here. In ECEn 320 I did it like this:
                 int enemyRowMovement = Math.abs(lastMove.getStartPosition().getRow() - lastMove.getEndPosition().getRow());
                 int adjacentDistance = lastMove.getEndPosition().getRow() - startPosition.getRow();
