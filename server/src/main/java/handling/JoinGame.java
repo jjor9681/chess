@@ -20,6 +20,7 @@ public class JoinGame implements Handler {
     @Override
     public void handle(Context ctx) {
         try {
+            // grab auth token and parse user and add em to the game.
             String authToken = ctx.header("Authorization");
             NewPlayer newPlayer = gson.fromJson(ctx.body(), NewPlayer.class);
             gameService.joinGame(authToken, newPlayer.playerColor(), newPlayer.gameID());
@@ -33,7 +34,7 @@ public class JoinGame implements Handler {
             ctx.status(401);
             ctx.result(gson.toJson(Map.of("message", ex.getMessage())));
         }
-        catch (AlreadyTakenException ex) {
+        catch (AlreadyTakenException ex) { // they can't steal someone else's color
             ctx.status(403);
             ctx.result(gson.toJson(Map.of("message", ex.getMessage())));
         }
