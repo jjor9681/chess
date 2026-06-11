@@ -155,10 +155,15 @@ public class ChessGame {
         // If a rook has moved, it can no longer castle with the king.
         // Now I am worried about someone promoting to a rook, and then moving it to a square that can castle.
         // If a corner square is ever captured, then this can happen. So I need to update the fields when a corner Rook gets captured.
-        if (pos.getRow() == 1 && pos.getColumn() == 1) whiteLeftRookCanCastle = false;
-        else if (pos.getRow() == 1 && pos.getColumn() == 8) whiteRightRookCanCastle = false;
-        else if (pos.getRow() == 8 && pos.getColumn() == 1) blackLeftRookCanCastle = false;
-        else if (pos.getRow() == 8 && pos.getColumn() == 8) blackRightRookCanCastle = false;
+        if (pos.getRow() == 1 && pos.getColumn() == 1) {
+            whiteLeftRookCanCastle = false;
+        } else if (pos.getRow() == 1 && pos.getColumn() == 8) {
+            whiteRightRookCanCastle = false;
+        } else if (pos.getRow() == 8 && pos.getColumn() == 1) {
+            blackLeftRookCanCastle = false;
+        } else if (pos.getRow() == 8 && pos.getColumn() == 8) {
+            blackRightRookCanCastle = false;
+        }
     }
 
     private ChessPosition findKingPosition(TeamColor teamColor) {
@@ -274,6 +279,8 @@ public class ChessGame {
                     if (!isInCheck(piece.getTeamColor())) {
                         validMoves.add(enPassant);
                     }
+
+                    // Put the board back exactly how it was!
                     board.addPiece(startPosition, piece);
                     board.addPiece(dyingPawnPosition, possiblePawn);
                     board.addPiece(enPassantEndPosition, null);
@@ -379,8 +386,11 @@ public class ChessGame {
                 // okay just need a last minute section for updating fields.
                 //  the king moved, then let's make his castling ability false.
                 if (piece.getPieceType() == ChessPiece.PieceType.KING) {
-                    if (piece.getTeamColor() == TeamColor.WHITE) whiteKingCanCastle = false;
-                    else blackKingCanCastle = false;
+                    if (piece.getTeamColor() == TeamColor.WHITE) {
+                        whiteKingCanCastle = false;
+                    } else {
+                        blackKingCanCastle = false;
+                    }
                 }
 
                 updateRookCastlingFlags(move.getStartPosition());
@@ -400,7 +410,9 @@ public class ChessGame {
      */
     public boolean isInCheck(TeamColor teamColor) {
         ChessPosition kingCurrentLocation = findKingPosition(teamColor);
-        if (kingCurrentLocation == null) return false;
+        if (kingCurrentLocation == null) {
+            return false;
+        }
 
         // Now that I know where the king is, I suppose I should just scan the
         // entire enemy team and see if any of them have the king's location in their set of
