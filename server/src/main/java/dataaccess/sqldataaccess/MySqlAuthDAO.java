@@ -11,29 +11,22 @@ public class MySqlAuthDAO implements AuthDAO {
     @Override
     public void createAuth(AuthData auth)
             throws DataAccessException {
-
         String statement =
                 """
                 INSERT INTO auth
                 (authToken, username)
                 VALUES (?, ?)
                 """;
-
         try (var conn = DatabaseManagerWrapper.getConnection();
              var ps = conn.prepareStatement(statement)) {
-
             ps.setString(
                     1,
                     auth.authToken());
-
             ps.setString(
                     2,
                     auth.username());
-
             ps.executeUpdate();
-
         } catch (Exception ex) {
-
             throw new DataAccessException(
                     "Unable to create auth",
                     ex);
@@ -43,8 +36,29 @@ public class MySqlAuthDAO implements AuthDAO {
     @Override
     public AuthData getAuth(String authToken)
             throws DataAccessException {
-
-        return null;
+        String statement =
+                """
+                SELECT authToken, username
+                FROM auth
+                WHERE authToken = ?
+                """;
+        try (var conn = DatabaseManagerWrapper.getConnection();
+             var ps = conn.prepareStatement(statement)) {
+            ps.setString(1, authToken);
+            try (var rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return new AuthData(
+                            rs.getString("authToken"),
+                            rs.getString("username")
+                    );
+                }
+            }
+            return null;
+        } catch (Exception ex) {
+            throw new DataAccessException(
+                    "Unable to retrieve auth",
+                    ex);
+        }
     }
 
     @Override
