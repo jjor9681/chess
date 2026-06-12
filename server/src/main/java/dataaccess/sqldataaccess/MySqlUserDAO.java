@@ -1,9 +1,9 @@
 package dataaccess.sqldataaccess;
 
 import dataaccess.DataAccessException;
+import dataaccess.DatabaseManagerWrapper;
 import dataaccess.UserDAO;
 import model.UserData;
-import dataaccess.DatabaseManager;
 
 public class MySqlUserDAO implements UserDAO {
 
@@ -12,7 +12,8 @@ public class MySqlUserDAO implements UserDAO {
 
         String statement = "TRUNCATE TABLE user";
 
-        try (var conn = DatabaseManager.getConnection();
+        // using a wrapper to get around having to have all my sql files crammed into dataaccess.
+        try (var conn = DatabaseManagerWrapper.getConnection();
              var preparedStatement = conn.prepareStatement(statement)) {
 
             preparedStatement.executeUpdate();
