@@ -14,9 +14,19 @@ public class GameService {
     private final GameDAO gameDAO;
     private final AuthDAO authDAO;
 
-    // Stack overflow has an example with an incrementing field that is used to make ID's for long lists.
-    // I'll use the same concept for making game ID's.
-    private int gameIDAssignment = 1;
+    // phase 4 edit
+    // I need to know how many games are currently in the server so that I can start
+    // assigning ID's that won't overwrite any other games.
+    private int trueGameID()
+            throws DataAccessException {
+        int highestID = 0;
+        for (GameData game : gameDAO.listGames()) {
+            highestID = Math.max(
+                    highestID,
+                    game.gameID());
+        }
+        return highestID + 1;
+    }
 
     public GameService(GameDAO gameDataAccessObject, AuthDAO authDataAccessObject) {
         this.gameDAO = gameDataAccessObject;
@@ -45,7 +55,11 @@ public class GameService {
         }
 
         ChessGame chessGame = new ChessGame();
-        int gameID = gameIDAssignment++;
+
+        // phase 4 edit
+        int gameID = trueGameID();
+
+
         GameData gameData = new GameData(gameID, null,null,gameName,chessGame);
         gameDAO.createGame(gameData);
 
