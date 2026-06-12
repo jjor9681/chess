@@ -53,7 +53,7 @@ public class MySqlAuthDAOTest {
         authDAO.deleteAuth("token");
         assertNull(authDAO.getAuth("token"));
     }
-
+    // deleting a missing auth token should be pretty harmless with my dao. we'll see haha.
     @Test
     public void deleteAuthNegative() {
         assertDoesNotThrow(() -> authDAO.deleteAuth("hackerToken"));
