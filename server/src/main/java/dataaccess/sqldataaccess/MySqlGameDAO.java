@@ -49,7 +49,7 @@ public class MySqlGameDAO implements GameDAO {
             ps.executeUpdate();
         } catch (Exception ex) {
             throw new DataAccessException(
-                    "Can't make a new game!",
+                    "Error: Can't make a new game!",
                     ex);
         }
     }
@@ -87,7 +87,7 @@ public class MySqlGameDAO implements GameDAO {
             return null;
         } catch (Exception ex) {
             throw new DataAccessException(
-                    "Unable to retrieve game",
+                    "Error: Unable to retrieve game",
                     ex);
         }
     }
@@ -125,7 +125,7 @@ public class MySqlGameDAO implements GameDAO {
             return games;
         } catch (Exception ex) {
             throw new DataAccessException(
-                    "Unable to list games",
+                    "Error: Unable to list games",
                     ex);
         }
     }
@@ -164,7 +164,7 @@ public class MySqlGameDAO implements GameDAO {
             ps.executeUpdate();
         } catch (Exception ex) {
             throw new DataAccessException(
-                    "Unable to update game",
+                    "Error: Unable to update game",
                     ex);
         }
     }
@@ -182,7 +182,7 @@ public class MySqlGameDAO implements GameDAO {
         } catch (Exception ex) {
 
             throw new DataAccessException(
-                    "couldn't clear the game table",
+                    "Error: couldn't clear the game table",
                     ex);
         }
     }

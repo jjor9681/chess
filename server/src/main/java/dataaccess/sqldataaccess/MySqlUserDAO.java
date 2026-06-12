@@ -21,7 +21,7 @@ public class MySqlUserDAO implements UserDAO {
 
         } catch (Exception ex) {
             throw new DataAccessException(
-                    "Unable to clear users", ex);
+                    "Error: Unable to clear users", ex);
         }
     }
 
@@ -50,7 +50,7 @@ public class MySqlUserDAO implements UserDAO {
             ps.executeUpdate();
         } catch (Exception ex) {
             throw new DataAccessException(
-                    "Can't create user",
+                    "Error: Can't create user",
                     ex);
         }
     }
@@ -79,7 +79,7 @@ public class MySqlUserDAO implements UserDAO {
             return null;
         } catch (Exception e) {
             throw new DataAccessException(
-                    "Unable to retrieve user", e);
+                    "Error: Unable to retrieve user", e);
         }
     }
 }

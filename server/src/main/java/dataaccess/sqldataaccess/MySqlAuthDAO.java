@@ -28,7 +28,7 @@ public class MySqlAuthDAO implements AuthDAO {
             ps.executeUpdate();
         } catch (Exception ex) {
             throw new DataAccessException(
-                    "Unable to create auth",
+                    "Error: Unable to create auth",
                     ex);
         }
     }
@@ -56,7 +56,7 @@ public class MySqlAuthDAO implements AuthDAO {
             return null;
         } catch (Exception ex) {
             throw new DataAccessException(
-                    "Unable to retrieve auth",
+                    "Error: Unable to retrieve auth",
                     ex);
         }
     }
@@ -75,7 +75,7 @@ public class MySqlAuthDAO implements AuthDAO {
             ps.executeUpdate();
         } catch (Exception ex) {
             throw new DataAccessException(
-                    "Unable to delete auth",
+                    "Error: Unable to delete auth",
                     ex);
         }
     }
@@ -92,7 +92,7 @@ public class MySqlAuthDAO implements AuthDAO {
 
         } catch (Exception ex) {
             throw new DataAccessException(
-                    "Unable to clear auth table",
+                    "Error: Unable to clear auth table",
                     ex);
         }
     }

@@ -33,7 +33,18 @@ public class UserService {
         }
 
         // Username passed security. (The username is available.)
-        userDAO.createUser(userData);
+        // phase 4 edit: use encryption.
+        String encryptedPassword =
+                Encryptor.encrypt(
+                        userData.password());
+
+        UserData encryptedUser =
+                new UserData(
+                        userData.username(),
+                        encryptedPassword,
+                        userData.email());
+
+        userDAO.createUser(encryptedUser);
 
         // Time to return an authToken and username. This was in the phase instructions.
         String authToken = UUID.randomUUID().toString();
@@ -53,7 +64,10 @@ public class UserService {
             throw new UnauthorizedException("Error: unauthorized");
         }
         // See if passwords match
-        if (otherUser.password().equals(userData.password())){
+        // Phase 4 edit, verify hashed passwords.
+        if (Encryptor.verify(
+                userData.password(),
+                otherUser.password())){
 
             // No need to create another user. That is done in register. This authData will only have the authToken that is new.
 
