@@ -65,10 +65,10 @@ public class MySqlUserDAO implements UserDAO {
                 WHERE username = ?
                 """;
         try (var conn = DatabaseManagerWrapper.getConnection();
-             var preparedStatement = conn.prepareStatement(statement)) {
-            preparedStatement.setString(1, username);
+             var ps = conn.prepareStatement(statement)) {
+            ps.setString(1, username);
             // petshop called this variable rs, and i believe that means results.
-            try (var rs = preparedStatement.executeQuery()) {
+            try (var rs = ps.executeQuery()) {
                 if (rs.next()) {
                     return new UserData(
                             rs.getString("username"),
