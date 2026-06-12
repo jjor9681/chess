@@ -29,6 +29,16 @@ public class Server {
 
     public Server() {
 
+
+        // Phase 4 new addition. Everytime the server starts up,
+        // there should always be a database to read from, so this
+        // will create one if there is not.
+        try {
+            DatabaseInitializer.initialize();
+        } catch (DataAccessException ex) {
+            throw new RuntimeException(ex);
+        }
+
         javalin = Javalin.create(
                 config -> config.staticFiles.add("web")
         );
