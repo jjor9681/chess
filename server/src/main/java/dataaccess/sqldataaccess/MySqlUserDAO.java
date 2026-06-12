@@ -13,14 +13,15 @@ public class MySqlUserDAO implements UserDAO {
         String statement = "TRUNCATE TABLE user";
 
         // using a wrapper to get around having to have all my sql files crammed into dataaccess.
+        // also petshop is ultra abbreviating things. I'll go with "preparedStatement" instead of ps
         try (var conn = DatabaseManagerWrapper.getConnection();
-             var preparedStatement = conn.prepareStatement(statement)) {
+             var ps = conn.prepareStatement(statement)) {
 
-            preparedStatement.executeUpdate();
+            ps.executeUpdate();
 
-        } catch (Exception e) {
+        } catch (Exception ex) {
             throw new DataAccessException(
-                    "Unable to clear users", e);
+                    "Unable to clear users", ex);
         }
     }
 
@@ -35,18 +36,18 @@ public class MySqlUserDAO implements UserDAO {
                 """;
         // This is the only way this can be done. I bet everyone did this.
         try (var conn = DatabaseManagerWrapper.getConnection();
-             var preparedStatement =
+             var ps =
                      conn.prepareStatement(statement)) {
-            preparedStatement.setString(
+            ps.setString(
                     1,
                     user.username());
-            preparedStatement.setString(
+            ps.setString(
                     2,
                     user.password());
-            preparedStatement.setString(
+            ps.setString(
                     3,
                     user.email());
-            preparedStatement.executeUpdate();
+            ps.executeUpdate();
         } catch (Exception ex) {
             throw new DataAccessException(
                     "Can't create user",
@@ -64,16 +65,15 @@ public class MySqlUserDAO implements UserDAO {
                 WHERE username = ?
                 """;
         try (var conn = DatabaseManagerWrapper.getConnection();
-             var preparedStatement =
-                     conn.prepareStatement(statement)) {
+             var preparedStatement = conn.prepareStatement(statement)) {
             preparedStatement.setString(1, username);
             // petshop called this variable rs, and i believe that means results.
-            try (var results = preparedStatement.executeQuery()) {
-                if (results.next()) {
+            try (var rs = preparedStatement.executeQuery()) {
+                if (rs.next()) {
                     return new UserData(
-                            results.getString("username"),
-                            results.getString("password"),
-                            results.getString("email"));
+                            rs.getString("username"),
+                            rs.getString("password"),
+                            rs.getString("email"));
                 }
             }
             return null;
