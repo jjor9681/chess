@@ -25,8 +25,33 @@ public class MySqlUserDAO implements UserDAO {
     }
 
     @Override
-    public void createUser(UserData user) throws DataAccessException {
-
+    public void createUser(UserData user)
+            throws DataAccessException {
+        String statement =
+                """
+                INSERT INTO user
+                (username, password, email)
+                VALUES (?, ?, ?)
+                """;
+        // This is the only way this can be done. I bet everyone did this.
+        try (var conn = DatabaseManagerWrapper.getConnection();
+             var preparedStatement =
+                     conn.prepareStatement(statement)) {
+            preparedStatement.setString(
+                    1,
+                    user.username());
+            preparedStatement.setString(
+                    2,
+                    user.password());
+            preparedStatement.setString(
+                    3,
+                    user.email());
+            preparedStatement.executeUpdate();
+        } catch (Exception ex) {
+            throw new DataAccessException(
+                    "Can't create user",
+                    ex);
+        }
     }
 
     @Override
