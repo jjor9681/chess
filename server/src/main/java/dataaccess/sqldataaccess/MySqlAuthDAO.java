@@ -7,10 +7,37 @@ import model.AuthData;
 
 public class MySqlAuthDAO implements AuthDAO {
 
+    // basically a copy paste of createUser() but with different fields.
     @Override
     public void createAuth(AuthData auth)
             throws DataAccessException {
 
+        String statement =
+                """
+                INSERT INTO auth
+                (authToken, username)
+                VALUES (?, ?)
+                """;
+
+        try (var conn = DatabaseManagerWrapper.getConnection();
+             var ps = conn.prepareStatement(statement)) {
+
+            ps.setString(
+                    1,
+                    auth.authToken());
+
+            ps.setString(
+                    2,
+                    auth.username());
+
+            ps.executeUpdate();
+
+        } catch (Exception ex) {
+
+            throw new DataAccessException(
+                    "Unable to create auth",
+                    ex);
+        }
     }
 
     @Override
@@ -36,10 +63,10 @@ public class MySqlAuthDAO implements AuthDAO {
 
             ps.executeUpdate();
 
-        } catch (Exception e) {
+        } catch (Exception ex) {
             throw new DataAccessException(
                     "Unable to clear auth table",
-                    e);
+                    ex);
         }
     }
 }
