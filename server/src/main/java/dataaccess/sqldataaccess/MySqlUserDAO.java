@@ -42,13 +42,13 @@ public class MySqlUserDAO implements UserDAO {
              var preparedStatement =
                      conn.prepareStatement(statement)) {
             preparedStatement.setString(1, username);
+            // petshop called this variable rs, and i believe that means results.
             try (var results = preparedStatement.executeQuery()) {
                 if (results.next()) {
                     return new UserData(
                             results.getString("username"),
                             results.getString("password"),
-                            results.getString("email")
-                    );
+                            results.getString("email"));
                 }
             }
             return null;
