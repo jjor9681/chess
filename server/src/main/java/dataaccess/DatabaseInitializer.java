@@ -1,17 +1,17 @@
 package dataaccess;
 
-import dataaccess.schema.AuthTable;
-import dataaccess.schema.GameTable;
-import dataaccess.schema.UserTable;
+import schemadesigns.AuthTables;
+import schemadesigns.GameTables;
+import schemadesigns.UserTables;
 
 import java.sql.SQLException;
 
 public class DatabaseInitializer {
 
     private static final String[] CREATE_STATEMENTS = {
-            UserTable.CREATE_STATEMENT,
-            AuthTable.CREATE_STATEMENT,
-            GameTable.CREATE_STATEMENT
+            UserTables.CREATE_STATEMENT,
+            AuthTables.CREATE_STATEMENT,
+            GameTables.CREATE_STATEMENT
     };
 
     public static void initialize() throws DataAccessException {
