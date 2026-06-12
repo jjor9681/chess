@@ -1,11 +1,13 @@
 package dataaccess.sqldataaccess;
 
+import chess.ChessGame;
 import com.google.gson.Gson;
 import dataaccess.DataAccessException;
 import dataaccess.DatabaseManagerWrapper;
 import dataaccess.GameDAO;
 import model.GameData;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 public class MySqlGameDAO implements GameDAO {
@@ -47,7 +49,7 @@ public class MySqlGameDAO implements GameDAO {
             ps.executeUpdate();
         } catch (Exception ex) {
             throw new DataAccessException(
-                    "Unable to create game",
+                    "Can't make a new game!",
                     ex);
         }
     }
@@ -55,21 +57,116 @@ public class MySqlGameDAO implements GameDAO {
     @Override
     public GameData getGame(int gameID)
             throws DataAccessException {
-
-        return null;
+        String statement =
+                """
+                SELECT gameID,
+                       whiteUsername,
+                       blackUsername,
+                       gameName,
+                       gameState
+                FROM game
+                WHERE gameID = ?
+                """;
+        try (var conn = DatabaseManagerWrapper.getConnection();
+             var ps = conn.prepareStatement(statement)) {
+            ps.setInt(1, gameID);
+            try (var rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    ChessGame game =
+                            new Gson().fromJson(
+                                    rs.getString("gameState"),
+                                    ChessGame.class);
+                    return new GameData(
+                            rs.getInt("gameID"),
+                            rs.getString("whiteUsername"),
+                            rs.getString("blackUsername"),
+                            rs.getString("gameName"),
+                            game);
+                }
+            }
+            return null;
+        } catch (Exception ex) {
+            throw new DataAccessException(
+                    "Unable to retrieve game",
+                    ex);
+        }
     }
 
     @Override
     public Collection<GameData> listGames()
             throws DataAccessException {
-
-        return null;
+        String statement =
+                """
+                SELECT gameID,
+                       whiteUsername,
+                       blackUsername,
+                       gameName,
+                       gameState
+                FROM game
+                """;
+        // haven't touched arraylist in a while. It's good to be back!
+        Collection<GameData> games = new ArrayList<>();
+        try (var conn = DatabaseManagerWrapper.getConnection();
+             var ps = conn.prepareStatement(statement);
+             var rs = ps.executeQuery()) {
+            while (rs.next()) {
+                ChessGame game =
+                        new Gson().fromJson(
+                                rs.getString("gameState"),
+                                ChessGame.class);
+                games.add(
+                        new GameData(
+                                rs.getInt("gameID"),
+                                rs.getString("whiteUsername"),
+                                rs.getString("blackUsername"),
+                                rs.getString("gameName"),
+                                game));
+            }
+            return games;
+        } catch (Exception ex) {
+            throw new DataAccessException(
+                    "Unable to list games",
+                    ex);
+        }
     }
 
     @Override
     public void updateGame(GameData game)
             throws DataAccessException {
-
+        String statement =
+                """
+                UPDATE game
+                SET whiteUsername = ?,
+                    blackUsername = ?,
+                    gameName = ?,
+                    gameState = ?
+                WHERE gameID = ?
+                """;
+        String gameState =
+                new Gson().toJson(game.game());
+        try (var conn = DatabaseManagerWrapper.getConnection();
+             var ps = conn.prepareStatement(statement)) {
+            ps.setString(
+                    1,
+                    game.whiteUsername());
+            ps.setString(
+                    2,
+                    game.blackUsername());
+            ps.setString(
+                    3,
+                    game.gameName());
+            ps.setString(
+                    4,
+                    gameState);
+            ps.setInt(
+                    5,
+                    game.gameID());
+            ps.executeUpdate();
+        } catch (Exception ex) {
+            throw new DataAccessException(
+                    "Unable to update game",
+                    ex);
+        }
     }
 
     @Override
