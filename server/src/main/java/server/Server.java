@@ -1,5 +1,8 @@
 package server;
 import dataaccess.*;
+import dataaccess.sqldataaccess.MySqlAuthDAO;
+import dataaccess.sqldataaccess.MySqlGameDAO;
+import dataaccess.sqldataaccess.MySqlUserDAO;
 import handling.*;
 import io.javalin.Javalin;
 import service.DeleteService;
@@ -44,9 +47,9 @@ public class Server {
         );
 
         // DAO Initialization
-        userDAO = new MemoryUserDAO();
-        authDAO = new MemoryAuthDAO();
-        gameDAO = new MemoryGameDAO();
+        userDAO = new MySqlUserDAO();
+        authDAO = new MySqlAuthDAO();
+        gameDAO = new MySqlGameDAO();
 
         // Service Initialization
         userService = new UserService(userDAO, authDAO);
