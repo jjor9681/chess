@@ -22,6 +22,8 @@ public class HttpTranslator {
         this.serverUrl = serverUrl;
     }
 
+    // high key just going to use generic T here so I don't have to write a million methods.
+    // Stole the idea from petshop. Otherwise i can't make a reusable helper
     public <T> T get(
             String path,
             String authToken,
