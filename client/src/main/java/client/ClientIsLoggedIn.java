@@ -2,6 +2,7 @@ package client;
 
 import model.GameData;
 import serverfacade.ServerFacade;
+import ui.GameBuilder;
 
 import java.util.Collection;
 
@@ -63,9 +64,20 @@ public class ClientIsLoggedIn {
         }
         GameData selectedGame = getGameFromListNumber(listNumber);
         server.joinGame(authToken, playerColor, selectedGame.gameID());
+
+        GameBuilder board = new GameBuilder();
+
+        if (playerColor.equals("WHITE")) {
+            return new LogoutResult(
+                    false,
+                    "Joined " + selectedGame.gameName() + " as WHITE.\n\n"
+                            + board.buildWhiteBoard());
+        }
+
         return new LogoutResult(
                 false,
-                "Joined " + selectedGame.gameName() + " as " + playerColor + ".\n");
+                "Joined " + selectedGame.gameName() + " as BLACK.\n\n"
+                        + board.buildBlackBoard());
     }
 
     private LogoutResult listGames(String authToken) throws Exception {
