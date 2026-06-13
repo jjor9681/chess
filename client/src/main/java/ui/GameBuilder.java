@@ -1,36 +1,102 @@
 package ui;
 
+import chess.ChessBoard;
+import chess.ChessGame;
+import chess.ChessPiece;
+import chess.ChessPosition;
+
+import static ui.EscapeSequences.*;
+
 public class GameBuilder {
+
     public String buildWhiteBoard() {
-        return """
-                  a  b  c  d  e  f  g  h
-
-                8 r  n  b  q  k  b  n  r
-                7 p  p  p  p  p  p  p  p
-                6 .  .  .  .  .  .  .  .
-                5 .  .  .  .  .  .  .  .
-                4 .  .  .  .  .  .  .  .
-                3 .  .  .  .  .  .  .  .
-                2 P  P  P  P  P  P  P  P
-                1 R  N  B  Q  K  B  N  R
-
-                  a  b  c  d  e  f  g  h
-                """;
+        ChessGame game = new ChessGame();
+        return buildBoard(game.getBoard(), true);
     }
+
     public String buildBlackBoard() {
-        return """
-                  h  g  f  e  d  c  b  a
+        ChessGame game = new ChessGame();
+        return buildBoard(game.getBoard(), false);
+    }
 
-                1 R  N  B  K  Q  B  N  R
-                2 P  P  P  P  P  P  P  P
-                3 .  .  .  .  .  .  .  .
-                4 .  .  .  .  .  .  .  .
-                5 .  .  .  .  .  .  .  .
-                6 .  .  .  .  .  .  .  .
-                7 p  p  p  p  p  p  p  p
-                8 r  n  b  k  q  b  n  r
+    private String buildBoard(ChessBoard board, boolean whitePerspective) {
+        StringBuilder result = new StringBuilder();
 
-                  h  g  f  e  d  c  b  a
-                """;
+        result.append(RESET_TEXT_COLOR).append(RESET_BG_COLOR).append("\n");
+
+        appendColumnLabels(result, whitePerspective);
+
+        if (whitePerspective) {
+            for (int row = 8; row >= 1; row--) {
+                appendRow(result, board, row, true);
+            }
+        } else {
+            for (int row = 1; row <= 8; row++) {
+                appendRow(result, board, row, false);
+            }
+        }
+
+        appendColumnLabels(result, whitePerspective);
+
+        result.append(RESET_TEXT_COLOR).append(RESET_BG_COLOR).append("\n");
+
+        return result.toString();
+    }
+
+    private void appendColumnLabels(StringBuilder result, boolean whitePerspective) {
+        result.append(RESET_BG_COLOR).append(SET_TEXT_COLOR_WHITE).append("   ");
+
+        if (whitePerspective) {
+            for (char col = 'a'; col <= 'h'; col++) {
+                result.append(" ").append(col).append(" ");
+            }
+        } else {
+            for (char col = 'h'; col >= 'a'; col--) {
+                result.append(" ").append(col).append(" ");
+            }
+        }
+
+        result.append("\n");
+    }
+
+    private void appendRow(StringBuilder result, ChessBoard board, int row, boolean whitePerspective) {
+        result.append(RESET_BG_COLOR).append(SET_TEXT_COLOR_WHITE).append(" ").append(row).append(" ");
+
+        if (whitePerspective) {
+            for (int col = 1; col <= 8; col++) {
+                appendSquare(result, board, row, col);
+            }
+        } else {
+            for (int col = 8; col >= 1; col--) {
+                appendSquare(result, board, row, col);
+            }
+        }
+
+        result.append(RESET_BG_COLOR).append(SET_TEXT_COLOR_WHITE).append(" ").append(row).append("\n");
+    }
+
+    private void appendSquare(StringBuilder result, ChessBoard board, int row, int col) {
+        boolean lightSquare = (row + col) % 2 != 0;
+
+        result.append(lightSquare ? SET_BG_COLOR_LIGHT_GREY : SET_BG_COLOR_DARK_GREEN);
+
+        ChessPiece piece = board.getPiece(new ChessPosition(row, col));
+
+        result.append(pieceText(piece));
+    }
+
+    private String pieceText(ChessPiece piece) {
+        if (piece == null) {
+            return EMPTY;
+        }
+
+        return switch (piece.getPieceType()) {
+            case KING -> piece.getTeamColor() == ChessGame.TeamColor.WHITE ? WHITE_KING : BLACK_KING;
+            case QUEEN -> piece.getTeamColor() == ChessGame.TeamColor.WHITE ? WHITE_QUEEN : BLACK_QUEEN;
+            case BISHOP -> piece.getTeamColor() == ChessGame.TeamColor.WHITE ? WHITE_BISHOP : BLACK_BISHOP;
+            case KNIGHT -> piece.getTeamColor() == ChessGame.TeamColor.WHITE ? WHITE_KNIGHT : BLACK_KNIGHT;
+            case ROOK -> piece.getTeamColor() == ChessGame.TeamColor.WHITE ? WHITE_ROOK : BLACK_ROOK;
+            case PAWN -> piece.getTeamColor() == ChessGame.TeamColor.WHITE ? WHITE_PAWN : BLACK_PAWN;
+        };
     }
 }
