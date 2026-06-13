@@ -103,4 +103,35 @@ public class ServerFacadeTests {
     public void logoutNegative() {
         assertThrows(Exception.class, () -> facade.logout("fakeAuthToken"));
     }
+
+    @Test
+    public void createGamePositive() throws Exception {
+        AuthData authData = facade.register("Jonas", "GreenEggsAndHam", "jonas@outlook.com");
+
+        int gameID = facade.createGame(authData.authToken(), "200_EloGame");
+
+        assertTrue(gameID > 0);
+    }
+
+    @Test
+    public void createGameNegative() {
+        assertThrows(
+                Exception.class,
+                () -> facade.createGame("trashAuthToken", "200_EloGame"));
+    }
+
+    @Test
+    public void listGamesPositive() throws Exception {
+        AuthData authData = facade.register("Jonas", "GreenEggsAndHam", "jonas@outlook.com");
+
+        facade.createGame(authData.authToken(), "3000 Elo Game");
+        facade.createGame(authData.authToken(), "200 Elo Game");
+        var games = facade.listGames(authData.authToken());
+        assertEquals(2, games.size());
+    }
+
+    @Test
+    public void listGamesNegative() {
+        assertThrows(Exception.class, () -> facade.listGames("fakeAuthToken"));
+    }
 }
