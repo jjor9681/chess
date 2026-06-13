@@ -123,9 +123,12 @@ public class ClientIsLoggedIn {
         }
         GameData selectedGame = getGameFromListNumber(listNumber);
 
+        GameBuilder board = new GameBuilder();
+
         return new LogoutResult(
                 false,
-                "Observing " + selectedGame.gameName() + ".\n");
+                "Observing " + selectedGame.gameName() + ".\n\n"
+                        + board.buildWhiteBoard());
     }
 
     public LogoutResult eval(
