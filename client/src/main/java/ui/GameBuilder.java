@@ -24,26 +24,26 @@ public class GameBuilder {
 
         result.append(RESET_TEXT_COLOR).append(RESET_BG_COLOR).append("\n");
 
-        appendColumnLabels(result, whitePerspective);
+        makeColumnLabels(result, whitePerspective);
 
         if (whitePerspective) {
             for (int row = 8; row >= 1; row--) {
-                appendRow(result, board, row, true);
+                makeRow(result, board, row, true);
             }
         } else {
             for (int row = 1; row <= 8; row++) {
-                appendRow(result, board, row, false);
+                makeRow(result, board, row, false);
             }
         }
 
-        appendColumnLabels(result, whitePerspective);
+        makeColumnLabels(result, whitePerspective);
 
         result.append(RESET_TEXT_COLOR).append(RESET_BG_COLOR).append("\n");
 
         return result.toString();
     }
 
-    private void appendColumnLabels(StringBuilder result, boolean whitePerspective) {
+    private void makeColumnLabels(StringBuilder result, boolean whitePerspective) {
         result.append(RESET_BG_COLOR).append(SET_TEXT_COLOR_WHITE).append("   ");
 
         if (whitePerspective) {
@@ -59,33 +59,43 @@ public class GameBuilder {
         result.append("\n");
     }
 
-    private void appendRow(StringBuilder result, ChessBoard board, int row, boolean whitePerspective) {
+    private void makeRow(StringBuilder result, ChessBoard board, int row, boolean whitePerspective) {
         result.append(RESET_BG_COLOR).append(SET_TEXT_COLOR_WHITE).append(" ").append(row).append(" ");
 
         if (whitePerspective) {
             for (int col = 1; col <= 8; col++) {
-                appendSquare(result, board, row, col);
+                nextSquare(result, board, row, col);
             }
         } else {
             for (int col = 8; col >= 1; col--) {
-                appendSquare(result, board, row, col);
+                nextSquare(result, board, row, col);
             }
         }
 
         result.append(RESET_BG_COLOR).append(SET_TEXT_COLOR_WHITE).append(" ").append(row).append("\n");
     }
 
-    private void appendSquare(StringBuilder result, ChessBoard board, int row, int col) {
+    private void nextSquare(StringBuilder result, ChessBoard board, int row, int col) {
         boolean lightSquare = (row + col) % 2 != 0;
-
-        result.append(lightSquare ? SET_BG_COLOR_LIGHT_GREY : SET_BG_COLOR_DARK_GREEN);
-
-        ChessPiece piece = board.getPiece(new ChessPosition(row, col));
-
-        result.append(pieceText(piece));
+        result.append(lightSquare
+                ? SET_BG_COLOR_LIGHT_GREY
+                : SET_BG_COLOR_DARK_GREEN);
+        ChessPiece piece =
+                board.getPiece(
+                        new ChessPosition(row, col));
+        if (piece == null) {
+            result.append(EMPTY);
+            return;
+        }
+        if (piece.getTeamColor() == ChessGame.TeamColor.WHITE) {
+            result.append(SET_TEXT_COLOR_WHITE);
+        } else {
+            result.append(SET_TEXT_COLOR_BLACK);
+        }
+        result.append(emptySquare(piece));
     }
 
-    private String pieceText(ChessPiece piece) {
+    private String emptySquare(ChessPiece piece) {
         if (piece == null) {
             return EMPTY;
         }
