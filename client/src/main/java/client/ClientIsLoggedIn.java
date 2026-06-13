@@ -42,6 +42,15 @@ public class ClientIsLoggedIn {
                 .get(listNumber - 1);
     }
 
+    // just adding this so that the player sees none instead of null.
+    private String displayPlayer(String username) {
+        if (username == null) {
+            return "none";
+        }
+
+        return username;
+    }
+
     private LogoutResult playGame(String[] params, String authToken) throws Exception {
         if (params.length != 2) {
             return new LogoutResult(
@@ -96,9 +105,9 @@ public class ClientIsLoggedIn {
                     .append(". ")
                     .append(game.gameName())
                     .append(" | White: ")
-                    .append(game.whiteUsername())
+                    .append(displayPlayer(game.whiteUsername()))
                     .append(" | Black: ")
-                    .append(game.blackUsername())
+                    .append(displayPlayer(game.blackUsername()))
                     .append("\n");
             number++;
         }
