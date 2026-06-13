@@ -31,7 +31,7 @@ public class ClientIsLoggedIn {
 
     private GameData getGameFromListNumber(int listNumber) throws Exception {
         if (gamesListMemory == null || gamesListMemory.isEmpty()) {
-            throw new Exception("You need to the the games list first.");
+            throw new Exception("You need to list the games first.");
         }
         if (listNumber < 1 || listNumber > gamesListMemory.size()) {
             throw new Exception("That game number does not exist..");

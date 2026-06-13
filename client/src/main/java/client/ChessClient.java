@@ -34,7 +34,7 @@ public class ChessClient {
                     System.out.print(result);
                 }
             } catch (Exception ex) {
-                System.out.print("Error: " + ex.getMessage() + "\n");
+                System.out.print(ex.getMessage() + "\n");
             }
         }
         System.out.println("Goodbye!");
