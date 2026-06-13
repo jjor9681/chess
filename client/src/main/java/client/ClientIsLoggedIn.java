@@ -95,6 +95,27 @@ public class ClientIsLoggedIn {
                 result.toString());
     }
 
+    private LogoutResult observeGame(String[] params) throws Exception {
+        if (params.length != 1) {
+            return new LogoutResult(
+                    false,
+                    "Expected: observe <game number>\n");
+        }
+        int listNumber;
+        try {
+            listNumber = Integer.parseInt(params[0]);
+        } catch (NumberFormatException ex) {
+            return new LogoutResult(
+                    false,
+                    "Game number must be a number.\n");
+        }
+        GameData selectedGame = getGameFromListNumber(listNumber);
+
+        return new LogoutResult(
+                false,
+                "Observing " + selectedGame.gameName() + ".\n");
+    }
+
     public LogoutResult eval(
             String command,
             String[] params,
@@ -105,6 +126,7 @@ public class ClientIsLoggedIn {
             case "create" -> createGame(params, authToken);
             case "list" -> listGames(authToken);
             case "play" -> playGame(params, authToken);
+            case "observe" -> observeGame(params);
             default -> new LogoutResult(
                     false,
                     "Unknown command. Type help.\n");
