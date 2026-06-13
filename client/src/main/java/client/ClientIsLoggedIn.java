@@ -28,9 +28,49 @@ public class ClientIsLoggedIn {
                 "Created game: " + gameName + "\n");
     }
 
+    private GameData getGameFromListNumber(int listNumber) throws Exception {
+        if (gamesListMemory == null || gamesListMemory.isEmpty()) {
+            throw new Exception("You need to the the games list first.");
+        }
+        if (listNumber < 1 || listNumber > gamesListMemory.size()) {
+            throw new Exception("That game number does not exist..");
+        }
+        return gamesListMemory
+                .stream()
+                .toList()
+                .get(listNumber - 1);
+    }
+
+    private LogoutResult playGame(String[] params, String authToken) throws Exception {
+        if (params.length != 2) {
+            return new LogoutResult(
+                    false,
+                    "Expected: play <game number> <WHITE|BLACK>\n");
+        }
+        int listNumber;
+        try {
+            listNumber = Integer.parseInt(params[0]);
+        } catch (NumberFormatException ex) {
+            return new LogoutResult(
+                    false,
+                    "Game number must be a number.\n");
+        }
+        String playerColor = params[1].toUpperCase();
+        if (!playerColor.equals("WHITE") && !playerColor.equals("BLACK")) {
+            return new LogoutResult(
+                    false,
+                    "Color must be WHITE or BLACK.\n");
+        }
+        GameData selectedGame = getGameFromListNumber(listNumber);
+        server.joinGame(authToken, playerColor, selectedGame.gameID());
+        return new LogoutResult(
+                false,
+                "Joined " + selectedGame.gameName() + " as " + playerColor + ".\n");
+    }
+
     private LogoutResult listGames(String authToken) throws Exception {
         var games = server.listGames(authToken);
-        gamesListMemory = server.listGames(authToken);
+        gamesListMemory = games;
 
         if (games.isEmpty()) {
             return new LogoutResult(
@@ -64,6 +104,7 @@ public class ClientIsLoggedIn {
             case "logout" -> logout(authToken);
             case "create" -> createGame(params, authToken);
             case "list" -> listGames(authToken);
+            case "play" -> playGame(params, authToken);
             default -> new LogoutResult(
                     false,
                     "Unknown command. Type help.\n");
