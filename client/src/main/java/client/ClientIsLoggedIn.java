@@ -1,10 +1,15 @@
 package client;
 
+import model.GameData;
 import serverfacade.ServerFacade;
+
+import java.util.Collection;
 
 public class ClientIsLoggedIn {
 
     private final ServerFacade server;
+    private Collection<GameData> gamesListMemory;
+
     public ClientIsLoggedIn(ServerFacade server) {
         this.server = server;
     }
@@ -25,6 +30,8 @@ public class ClientIsLoggedIn {
 
     private LogoutResult listGames(String authToken) throws Exception {
         var games = server.listGames(authToken);
+        gamesListMemory = server.listGames(authToken);
+
         if (games.isEmpty()) {
             return new LogoutResult(
                     false,
