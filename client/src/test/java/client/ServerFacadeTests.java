@@ -83,9 +83,7 @@ public class ServerFacadeTests {
 
     @Test
     public void loginNegative() {
-        assertThrows(
-                Exception.class,
-                () -> facade.login(
+        assertThrows(Exception.class, () -> facade.login(
                         "Jonas",
                         "susPassword"));
     }
