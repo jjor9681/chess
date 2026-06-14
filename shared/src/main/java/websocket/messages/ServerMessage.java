@@ -1,3 +1,5 @@
+// Not quite sure what I'm looking at here. Have to watch the lectures first.
+
 package websocket.messages;
 
 import java.util.Objects;
