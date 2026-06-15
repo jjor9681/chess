@@ -8,6 +8,7 @@ import dataaccess.AuthDAO;
 import dataaccess.GameDAO;
 import org.eclipse.jetty.websocket.api.Session;
 import websocket.commands.UserGameCommand;
+import server.websocket.move.MoveCommand;
 
 public class CommandController {
 
