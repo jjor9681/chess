@@ -46,13 +46,7 @@ public class WebSocketFacade extends Endpoint {
                     new MessageHandler.Whole<String>() {
                         @Override
                         public void onMessage(String message) {
-                            ServerMessage serverMessage =
-                                    gson.fromJson(
-                                            message,
-                                            ServerMessage.class);
-
-                            notificationHandler.notify(
-                                    serverMessage);
+                            notificationHandler.notify(message);
                         }
                     });
 
