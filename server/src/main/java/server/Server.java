@@ -8,6 +8,7 @@ import io.javalin.Javalin;
 import service.DeleteService;
 import service.GameService;
 import service.UserService;
+import server.websocket.WebSocketHandler;
 
 public class Server {
 
@@ -71,7 +72,7 @@ public class Server {
     }
 
     public int run(int desiredPort) {
-        javalin.start(desiredPort);
+
 
         // endpoints
         javalin.delete("/db", clear);
@@ -81,6 +82,18 @@ public class Server {
         javalin.get("/game", listGames);
         javalin.post("/game", createGame);
         javalin.put("/game", joinGame);
+
+        // phase 6 websocket endpoint.
+        javalin.ws("/ws", ws -> {
+            WebSocketHandler webSocketHandler =
+                    new WebSocketHandler(authDAO, gameDAO);
+
+            ws.onConnect(webSocketHandler);
+            ws.onMessage(webSocketHandler);
+            ws.onClose(webSocketHandler);
+        });
+
+        javalin.start(desiredPort);
 
         return javalin.port();
     }
