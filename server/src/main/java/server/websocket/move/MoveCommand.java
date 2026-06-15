@@ -45,8 +45,7 @@ public class MoveCommand {
                         gameDAO);
 
         this.moveCommunicator =
-                new MoveCommunicator(
-                        connectionManager);
+                new MoveCommunicator(connectionManager);
 
         this.errorSender =
                 errorSender;
