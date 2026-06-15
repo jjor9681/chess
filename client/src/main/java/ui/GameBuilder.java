@@ -11,13 +11,22 @@ public class GameBuilder {
 
     public String buildWhiteBoard() {
         ChessGame game = new ChessGame();
-        return buildBoard(game.getBoard(), true);
+        return buildWhiteBoard(game);
     }
 
     public String buildBlackBoard() {
         ChessGame game = new ChessGame();
+        return buildBlackBoard(game);
+    }
+
+    public String buildWhiteBoard(ChessGame game) {
+        return buildBoard(game.getBoard(), true);
+    }
+
+    public String buildBlackBoard(ChessGame game) {
         return buildBoard(game.getBoard(), false);
     }
+
 
     private String buildBoard(ChessBoard board, boolean whitePerspective) {
         StringBuilder result = new StringBuilder();
