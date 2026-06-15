@@ -1,4 +1,5 @@
 // Not quite sure what I'm looking at here. Have to watch the lectures first.
+// After watching the lectures, I believe I should not start here.
 
 package websocket.messages;
 
