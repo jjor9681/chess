@@ -20,12 +20,18 @@ public class ClientIsLoggedIn {
         if (params.length < 1) {
             return new LogoutResult(
                     false,
+                    false,
+                    null,
+                    null,
                     "Expected: create <game name>\n");
         }
         String gameName = String.join(" ", params);
         server.createGame(authToken, gameName);
         return new LogoutResult(
                 false,
+                false,
+                null,
+                null,
                 "Created game: " + gameName + "\n");
     }
 
@@ -55,6 +61,9 @@ public class ClientIsLoggedIn {
         if (params.length != 2) {
             return new LogoutResult(
                     false,
+                    false,
+                    null,
+                    null,
                     "Expected: play <game number> <WHITE|BLACK>\n");
         }
         int listNumber;
@@ -63,12 +72,18 @@ public class ClientIsLoggedIn {
         } catch (NumberFormatException ex) {
             return new LogoutResult(
                     false,
+                    false,
+                    null,
+                    null,
                     "Game number must be a number.\n");
         }
         String playerColor = params[1].toUpperCase();
         if (!playerColor.equals("WHITE") && !playerColor.equals("BLACK")) {
             return new LogoutResult(
                     false,
+                    false,
+                    null,
+                    null,
                     "Color must be WHITE or BLACK.\n");
         }
         GameData selectedGame = getGameFromListNumber(listNumber);
@@ -79,12 +94,18 @@ public class ClientIsLoggedIn {
         if (playerColor.equals("WHITE")) {
             return new LogoutResult(
                     false,
+                    true,
+                    selectedGame.gameID(),
+                    playerColor,
                     "Joined " + selectedGame.gameName() + " as WHITE.\n\n"
                             + board.buildWhiteBoard());
         }
 
         return new LogoutResult(
                 false,
+                true,
+                selectedGame.gameID(),
+                playerColor,
                 "Joined " + selectedGame.gameName() + " as BLACK.\n\n"
                         + board.buildBlackBoard());
     }
@@ -96,6 +117,9 @@ public class ClientIsLoggedIn {
         if (games.isEmpty()) {
             return new LogoutResult(
                     false,
+                    false,
+                    null,
+                    null,
                     "No games available.\n");
         }
         StringBuilder result = new StringBuilder();
@@ -113,6 +137,9 @@ public class ClientIsLoggedIn {
         }
         return new LogoutResult(
                 false,
+                false,
+                null,
+                null,
                 result.toString());
     }
 
@@ -120,6 +147,9 @@ public class ClientIsLoggedIn {
         if (params.length != 1) {
             return new LogoutResult(
                     false,
+                    false,
+                    null,
+                    null,
                     "Expected: observe <game number>\n");
         }
         int listNumber;
@@ -128,6 +158,9 @@ public class ClientIsLoggedIn {
         } catch (NumberFormatException ex) {
             return new LogoutResult(
                     false,
+                    false,
+                    null,
+                    null,
                     "Game number must be a number.\n");
         }
         GameData selectedGame = getGameFromListNumber(listNumber);
@@ -136,6 +169,9 @@ public class ClientIsLoggedIn {
 
         return new LogoutResult(
                 false,
+                true,
+                selectedGame.gameID(),
+                "WHITE",
                 "Observing " + selectedGame.gameName() + ".\n\n"
                         + board.buildWhiteBoard());
     }
@@ -153,6 +189,9 @@ public class ClientIsLoggedIn {
             case "observe" -> observeGame(params);
             default -> new LogoutResult(
                     false,
+                    false,
+                    null,
+                    null,
                     "Unknown command. Type help.\n");
         };
     }
@@ -162,6 +201,9 @@ public class ClientIsLoggedIn {
 
         return new LogoutResult(
                 true,
+                false,
+                null,
+                null,
                 "Logged out.\n");
     }
 
@@ -180,6 +222,9 @@ public class ClientIsLoggedIn {
 
     public record LogoutResult(
             boolean loggedOut,
+            boolean enteredGame,
+            Integer gameID,
+            String perspective,
             String message
     ) {}
 }
