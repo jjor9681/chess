@@ -16,6 +16,40 @@ public class LeaveValidator {
     private final GameDAO gameDAO;
     private final ErrorSender errorSender;
 
+    private AuthData getAuthData(
+            UserGameCommand command,
+            Session session) throws Exception {
+
+        AuthData authData =
+                authDAO.getAuth(
+                        command.getAuthToken());
+
+        if (authData == null) {
+            errorSender.send(
+                    session,
+                    "Error: unauthorized");
+        }
+
+        return authData;
+    }
+
+    private GameData getGameData(
+            UserGameCommand command,
+            Session session) throws Exception {
+
+        GameData gameData =
+                gameDAO.getGame(
+                        command.getGameID());
+
+        if (gameData == null) {
+            errorSender.send(
+                    session,
+                    "Error: game not found");
+        }
+
+        return gameData;
+    }
+
     public LeaveValidator(
             AuthDAO authDAO,
             GameDAO gameDAO,
@@ -28,24 +62,25 @@ public class LeaveValidator {
     public ValidLeaveData validate(
             UserGameCommand command,
             Session session) throws Exception {
+
         AuthData authData =
-                authDAO.getAuth(
-                        command.getAuthToken());
+                getAuthData(
+                        command,
+                        session);
+
         if (authData == null) {
-            errorSender.send(
-                    session,
-                    "Error: unauthorized");
             return null;
         }
+
         GameData gameData =
-                gameDAO.getGame(
-                        command.getGameID());
+                getGameData(
+                        command,
+                        session);
+
         if (gameData == null) {
-            errorSender.send(
-                    session,
-                    "Error: game not found");
             return null;
         }
+
         return new ValidLeaveData(
                 authData,
                 gameData);
