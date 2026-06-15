@@ -366,6 +366,11 @@ public class ChessGame {
                 updateRookCastlingFlags(move.getStartPosition());
                 updateRookCastlingFlags(move.getEndPosition());
 
+                // phase 6 addition.
+                if (isInCheckmate(teamTurn) || isInStalemate(teamTurn)) {
+                    gameOver = true;
+                }
+
                 return;
             }
         }
@@ -470,11 +475,13 @@ public class ChessGame {
             return false;
         }
         ChessGame chessGame = (ChessGame) o;
-        return teamTurn == chessGame.teamTurn && Objects.equals(board, chessGame.board);
+        return gameOver == chessGame.gameOver
+                && teamTurn == chessGame.teamTurn
+                && Objects.equals(board, chessGame.board);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(teamTurn, board);
+        return Objects.hash(teamTurn, board, gameOver);
     }
 }
