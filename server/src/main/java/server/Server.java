@@ -65,6 +65,9 @@ public class Server {
         createGame = new CreateGame(gameService);
         joinGame = new JoinGame(gameService);
         clear = new Clear(deleteService);
+
+        // Phase 6 server start.
+
     }
 
     public int run(int desiredPort) {
