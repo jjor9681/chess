@@ -33,6 +33,9 @@ public class ChessGame {
     private boolean blackRightRookCanCastle;
     private ChessMove lastMove;
 
+    // Phase 6. I need a way to communicate that the game is over.
+    private boolean gameOver;
+
     public ChessGame() {
         // White always goes first so I can just have it always start with white.
         teamTurn = TeamColor.WHITE;
@@ -50,6 +53,18 @@ public class ChessGame {
         blackLeftRookCanCastle = true;
         blackRightRookCanCastle = true;
         lastMove = null;
+
+        gameOver = false;
+    }
+
+    // Phase 6 methods.
+
+    public boolean isGameOver() {
+        return gameOver;
+    }
+
+    public void setGameOver(boolean gameOver) {
+        this.gameOver = gameOver;
     }
 
     /**
