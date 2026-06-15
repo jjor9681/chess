@@ -42,7 +42,8 @@ public class GameplayClient implements NotificationHandler {
                 new Moves(
                         webSocket,
                         authToken,
-                        gameID);
+                        gameID,
+                        board);
 
         webSocket.connect(
                 authToken,

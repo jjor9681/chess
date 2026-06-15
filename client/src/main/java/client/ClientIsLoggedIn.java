@@ -89,25 +89,13 @@ public class ClientIsLoggedIn {
         GameData selectedGame = getGameFromListNumber(listNumber);
         server.joinGame(authToken, playerColor, selectedGame.gameID());
 
-        GameBuilder board = new GameBuilder();
-
-        if (playerColor.equals("WHITE")) {
-            return new LogoutResult(
-                    false,
-                    true,
-                    selectedGame.gameID(),
-                    playerColor,
-                    "Joined " + selectedGame.gameName() + " as WHITE.\n\n"
-                            + board.buildWhiteBoard());
-        }
 
         return new LogoutResult(
                 false,
                 true,
                 selectedGame.gameID(),
                 playerColor,
-                "Joined " + selectedGame.gameName() + " as BLACK.\n\n"
-                        + board.buildBlackBoard());
+                "Joined " + selectedGame.gameName() + " as " + playerColor + ".\n");
     }
 
     private LogoutResult listGames(String authToken) throws Exception {
@@ -165,15 +153,12 @@ public class ClientIsLoggedIn {
         }
         GameData selectedGame = getGameFromListNumber(listNumber);
 
-        GameBuilder board = new GameBuilder();
-
         return new LogoutResult(
                 false,
                 true,
                 selectedGame.gameID(),
                 "WHITE",
-                "Observing " + selectedGame.gameName() + ".\n\n"
-                        + board.buildWhiteBoard());
+                "Observing " + selectedGame.gameName() + ".\n");
     }
 
     public LogoutResult eval(

@@ -2,8 +2,11 @@ package ui;
 
 import chess.ChessBoard;
 import chess.ChessGame;
+import chess.ChessMove;
 import chess.ChessPiece;
 import chess.ChessPosition;
+
+import java.util.Collection;
 
 import static ui.EscapeSequences.*;
 
@@ -27,8 +30,35 @@ public class GameBuilder {
         return buildBoard(game.getBoard(), false);
     }
 
+    public String buildHighlightedBoard(
+            ChessGame game,
+            ChessPosition selectedPosition,
+            boolean whitePerspective) {
+
+        Collection<ChessMove> legalMoves =
+                game.validMoves(selectedPosition);
+
+        return buildBoard(
+                game.getBoard(),
+                whitePerspective,
+                selectedPosition,
+                legalMoves);
+    }
 
     private String buildBoard(ChessBoard board, boolean whitePerspective) {
+        return buildBoard(
+                board,
+                whitePerspective,
+                null,
+                null);
+    }
+
+    private String buildBoard(
+            ChessBoard board,
+            boolean whitePerspective,
+            ChessPosition selectedPosition,
+            Collection<ChessMove> legalMoves) {
+
         StringBuilder result = new StringBuilder();
 
         result.append(RESET_TEXT_COLOR).append(RESET_BG_COLOR).append("\n");
@@ -37,11 +67,23 @@ public class GameBuilder {
 
         if (whitePerspective) {
             for (int row = 8; row >= 1; row--) {
-                makeRow(result, board, row, true);
+                makeRow(
+                        result,
+                        board,
+                        row,
+                        true,
+                        selectedPosition,
+                        legalMoves);
             }
         } else {
             for (int row = 1; row <= 8; row++) {
-                makeRow(result, board, row, false);
+                makeRow(
+                        result,
+                        board,
+                        row,
+                        false,
+                        selectedPosition,
+                        legalMoves);
             }
         }
 
@@ -68,40 +110,101 @@ public class GameBuilder {
         result.append("\n");
     }
 
-    private void makeRow(StringBuilder result, ChessBoard board, int row, boolean whitePerspective) {
+    private void makeRow(
+            StringBuilder result,
+            ChessBoard board,
+            int row,
+            boolean whitePerspective,
+            ChessPosition selectedPosition,
+            Collection<ChessMove> legalMoves) {
+
         result.append(RESET_BG_COLOR).append(SET_TEXT_COLOR_WHITE).append(" ").append(row).append(" ");
 
         if (whitePerspective) {
             for (int col = 1; col <= 8; col++) {
-                nextSquare(result, board, row, col);
+                nextSquare(
+                        result,
+                        board,
+                        row,
+                        col,
+                        selectedPosition,
+                        legalMoves);
             }
         } else {
             for (int col = 8; col >= 1; col--) {
-                nextSquare(result, board, row, col);
+                nextSquare(
+                        result,
+                        board,
+                        row,
+                        col,
+                        selectedPosition,
+                        legalMoves);
             }
         }
 
         result.append(RESET_BG_COLOR).append(SET_TEXT_COLOR_WHITE).append(" ").append(row).append("\n");
     }
 
-    private void nextSquare(StringBuilder result, ChessBoard board, int row, int col) {
-        boolean lightSquare = (row + col) % 2 != 0;
-        result.append(lightSquare
-                ? SET_BG_COLOR_LIGHT_GREY
-                : SET_BG_COLOR_DARK_GREEN);
+    private void nextSquare(
+            StringBuilder result,
+            ChessBoard board,
+            int row,
+            int col,
+            ChessPosition selectedPosition,
+            Collection<ChessMove> legalMoves) {
+
+        ChessPosition currentPosition =
+                new ChessPosition(
+                        row,
+                        col);
+
+        if (currentPosition.equals(selectedPosition)) {
+            result.append(SET_BG_COLOR_YELLOW);
+        } else if (isLegalDestination(
+                currentPosition,
+                legalMoves)) {
+
+            result.append(SET_BG_COLOR_GREEN);
+        } else {
+            boolean lightSquare = (row + col) % 2 != 0;
+            result.append(lightSquare
+                    ? SET_BG_COLOR_LIGHT_GREY
+                    : SET_BG_COLOR_DARK_GREEN);
+        }
+
         ChessPiece piece =
                 board.getPiece(
-                        new ChessPosition(row, col));
+                        currentPosition);
+
         if (piece == null) {
             result.append(EMPTY);
             return;
         }
+
         if (piece.getTeamColor() == ChessGame.TeamColor.WHITE) {
             result.append(SET_TEXT_COLOR_WHITE);
         } else {
             result.append(SET_TEXT_COLOR_BLACK);
         }
+
         result.append(emptySquare(piece));
+    }
+
+    private boolean isLegalDestination(
+            ChessPosition position,
+            Collection<ChessMove> legalMoves) {
+
+        if (legalMoves == null) {
+            return false;
+        }
+
+        for (ChessMove move : legalMoves) {
+            if (move.getEndPosition().equals(position)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private String emptySquare(ChessPiece piece) {

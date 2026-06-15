@@ -9,15 +9,18 @@ public class Moves {
     private final WebSocketFacade webSocket;
     private final String authToken;
     private final int gameID;
+    private final Board board;
 
     public Moves(
             WebSocketFacade webSocket,
             String authToken,
-            int gameID) {
+            int gameID,
+            Board board) {
 
         this.webSocket = webSocket;
         this.authToken = authToken;
         this.gameID = gameID;
+        this.board = board;
     }
 
     public Result move(String[] params) throws Exception {
@@ -49,16 +52,19 @@ public class Moves {
                 "Move sent.\n");
     }
 
-    public Result highlight(String[] params) {
+    public Result highlight(String[] params) throws Exception {
         if (params.length != 1) {
             return new Result(
                     false,
                     "Expected: highlight <position>\n");
         }
 
+        ChessPosition position =
+                parsePosition(params[0]);
+
         return new Result(
                 false,
-                "Highlight not implemented yet.\n");
+                board.highlight(position));
     }
 
     private ChessPosition parsePosition(String input) throws Exception {
