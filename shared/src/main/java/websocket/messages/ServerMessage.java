@@ -1,5 +1,10 @@
-// Not quite sure what I'm looking at here. Have to watch the lectures first.
-// After watching the lectures, I believe I should not start here.
+// What PetShop shows me:
+// On the client side, websocketfacade extends endpoint
+// it opens ws://.../ws for me
+// it sends json with session.getBasicRemote().sendText()
+// receives message with addMessageHandler
+// forwards messages to an interface for whoever is watching.
+
 
 package websocket.messages;
 
