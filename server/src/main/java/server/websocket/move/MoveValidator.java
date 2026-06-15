@@ -47,6 +47,12 @@ public class MoveValidator {
                     "Error: game not found");
             return null;
         }
+        if (gameData.game().isGameOver()) {
+            errorSender.send(
+                    session,
+                    "Error: game is over");
+            return null;
+        }
         ChessPiece piece =
                 gameData.game()
                         .getBoard()
