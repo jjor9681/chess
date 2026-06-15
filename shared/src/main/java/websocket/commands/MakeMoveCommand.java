@@ -1,4 +1,6 @@
 // This file appears in the spec, so I will start here.
+// I think all this is doing is giving MAKE_MOVE
+// an extra field for ChessMove.
 
 package websocket.commands;
 import chess.ChessMove;
