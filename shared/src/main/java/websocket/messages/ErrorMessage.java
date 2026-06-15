@@ -2,9 +2,7 @@
 // The field ErrorMessage is what I'm really looking for though.
 
 package websocket.messages;
-
 import java.util.Objects;
-
 public class ErrorMessage extends ServerMessage {
 
     private final String errorMessage;
