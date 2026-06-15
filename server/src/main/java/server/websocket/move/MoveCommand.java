@@ -70,15 +70,17 @@ public class MoveCommand {
                 return;
             }
 
-            moveMaker.makeMove(
-                    command,
-                    moveData.gameData());
+            var updatedGame =
+                    moveMaker.makeMove(
+                            command,
+                            moveData.gameData());
 
             moveCommunicator.sendMoveMessages(
                     command,
                     session,
                     moveData.authData(),
-                    moveData.gameData());
+                    moveData.gameData(),
+                    updatedGame);
 
         } catch (Exception ex) {
             errorSender.send(
