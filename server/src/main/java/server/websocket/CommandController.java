@@ -7,6 +7,7 @@ import com.google.gson.Gson;
 import dataaccess.AuthDAO;
 import dataaccess.GameDAO;
 import org.eclipse.jetty.websocket.api.Session;
+import server.websocket.resign.ResignCommand;
 import websocket.commands.UserGameCommand;
 import server.websocket.move.MoveCommand;
 
