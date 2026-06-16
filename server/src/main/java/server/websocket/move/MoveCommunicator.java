@@ -6,6 +6,7 @@
 package server.websocket.move;
 
 import chess.ChessGame;
+import chess.ChessPosition;
 import model.AuthData;
 import model.GameData;
 import org.eclipse.jetty.websocket.api.Session;
@@ -22,6 +23,37 @@ public class MoveCommunicator {
         this.connectionManager = connectionManager;
     }
 
+    private String moveMessage(
+            AuthData authData,
+            MakeMoveCommand command) {
+
+        return authData.username()
+                + " moved "
+                + positionText(command.getMove().getStartPosition())
+                + " to "
+                + positionText(command.getMove().getEndPosition())
+                + ".";
+    }
+
+    private String positionText(ChessPosition position) {
+        return columnText(position.getColumn())
+                + position.getRow();
+    }
+
+    private String columnText(int column) {
+        return switch (column) {
+            case 1 -> "a";
+            case 2 -> "b";
+            case 3 -> "c";
+            case 4 -> "d";
+            case 5 -> "e";
+            case 6 -> "f";
+            case 7 -> "g";
+            case 8 -> "h";
+            default -> "?";
+        };
+    }
+
     public void sendMoveMessages(
             MakeMoveCommand command,
             Session session,
@@ -35,8 +67,9 @@ public class MoveCommunicator {
                 command.getGameID(),
                 session,
                 new NotificationMessage(
-                        authData.username()
-                                + " made a move."));
+                        moveMessage(
+                                authData,
+                                command)));
         sendGameStatusNotifications(
                 command.getGameID(),
                 updatedGame,

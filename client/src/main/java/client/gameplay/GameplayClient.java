@@ -79,6 +79,7 @@ public class GameplayClient implements NotificationHandler {
             case "leave" -> leave();
 
             case "resign" -> resign();
+            case "confirm" -> confirmResign();
 
             default -> new Result(
                     false,
@@ -110,6 +111,11 @@ public class GameplayClient implements NotificationHandler {
                     "Observers cannot resign.\n");
         }
 
+        return new Result(
+                false,
+                "Are you sure you want to resign? Type: confirm\n");
+    }
+    private Result confirmResign() throws Exception {
         webSocket.resign(
                 authToken,
                 gameID);
