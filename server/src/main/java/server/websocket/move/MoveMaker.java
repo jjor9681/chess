@@ -23,8 +23,13 @@ public class MoveMaker {
         ChessGame game =
                 gameData.game();
 
-        game.makeMove(
-                command.getMove());
+        try {
+            game.makeMove(
+                    command.getMove());
+        } catch (Exception ex) {
+            throw new Exception(
+                    "invalid move");
+        }
 
         GameData updatedGame =
                 new GameData(

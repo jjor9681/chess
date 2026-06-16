@@ -12,6 +12,7 @@ public class GameplayClient implements NotificationHandler {
     private final MessageHandler messageHandler;
     private final Moves moves;
     private final Help help = new Help();
+    private final String perspective;
 
     private final String authToken;
     private final int gameID;
@@ -24,6 +25,7 @@ public class GameplayClient implements NotificationHandler {
 
         this.authToken = authToken;
         this.gameID = gameID;
+        this.perspective = perspective;
 
         board =
                 new Board(
@@ -43,7 +45,8 @@ public class GameplayClient implements NotificationHandler {
                         webSocket,
                         authToken,
                         gameID,
-                        board);
+                        board,
+                        perspective);
 
         webSocket.connect(
                 authToken,
@@ -100,6 +103,13 @@ public class GameplayClient implements NotificationHandler {
     }
 
     private Result resign() throws Exception {
+
+        if (perspective.equals("OBSERVER")) {
+            return new Result(
+                    false,
+                    "Observers cannot resign.\n");
+        }
+
         webSocket.resign(
                 authToken,
                 gameID);

@@ -28,6 +28,24 @@ public class ConnectCommand {
         this.errorSender = errorSender;
     }
 
+    private String connectMessage(
+            AuthData authData,
+            GameData gameData) {
+
+        String username =
+                authData.username();
+
+        if (username.equals(gameData.whiteUsername())) {
+            return username + " joined as WHITE.";
+        }
+
+        if (username.equals(gameData.blackUsername())) {
+            return username + " joined as BLACK.";
+        }
+
+        return username + " joined as an observer.";
+    }
+
     public void execute(
             UserGameCommand command,
             Session session) {
@@ -62,8 +80,9 @@ public class ConnectCommand {
                     command.getGameID(),
                     session,
                     new NotificationMessage(
-                            authData.username()
-                                    + " connected to the game."));
+                            connectMessage(
+                                    authData,
+                                    gameData)));
         }
         catch (Exception ex) {
             errorSender.send(

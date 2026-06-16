@@ -157,7 +157,7 @@ public class ClientIsLoggedIn {
                 false,
                 true,
                 selectedGame.gameID(),
-                "WHITE",
+                "OBSERVER",
                 "Observing " + selectedGame.gameName() + ".\n");
     }
 

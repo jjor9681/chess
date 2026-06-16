@@ -1,6 +1,7 @@
 package client.gameplay;
 
 import chess.ChessMove;
+import chess.ChessPiece;
 import chess.ChessPosition;
 import client.websocket.WebSocketFacade;
 
@@ -10,24 +11,33 @@ public class Moves {
     private final String authToken;
     private final int gameID;
     private final Board board;
+    private final String perspective;
 
     public Moves(
             WebSocketFacade webSocket,
             String authToken,
             int gameID,
-            Board board) {
+            Board board,
+            String perspective) {
 
         this.webSocket = webSocket;
         this.authToken = authToken;
         this.gameID = gameID;
         this.board = board;
+        this.perspective = perspective;
     }
 
     public Result move(String[] params) throws Exception {
-        if (params.length != 2) {
+        if (perspective.equals("OBSERVER")) {
             return new Result(
                     false,
-                    "Expected: move <start> <end>\n");
+                    "Observers cannot make moves.\n");
+        }
+
+        if (params.length != 2 && params.length != 3) {
+            return new Result(
+                    false,
+                    "Expected: move <start> <end> [QUEEN|ROOK|BISHOP|KNIGHT]\n");
         }
 
         ChessPosition start =
@@ -40,7 +50,7 @@ public class Moves {
                 new ChessMove(
                         start,
                         end,
-                        null);
+                        getPromotionPiece(params));
 
         webSocket.makeMove(
                 authToken,
@@ -89,6 +99,21 @@ public class Moves {
         return new ChessPosition(
                 row,
                 column);
+    }
+
+    private ChessPiece.PieceType getPromotionPiece(String[] params) throws Exception {
+        if (params.length == 2) {
+            return null;
+        }
+
+        return switch (params[2].toUpperCase()) {
+            case "QUEEN" -> ChessPiece.PieceType.QUEEN;
+            case "ROOK" -> ChessPiece.PieceType.ROOK;
+            case "BISHOP" -> ChessPiece.PieceType.BISHOP;
+            case "KNIGHT" -> ChessPiece.PieceType.KNIGHT;
+            default -> throw new Exception(
+                    "Promotion piece must be QUEEN, ROOK, BISHOP, or KNIGHT.");
+        };
     }
 
     private int stringToColumn(char file) throws Exception {
